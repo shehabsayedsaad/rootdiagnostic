@@ -1,0 +1,7 @@
+Options -Indexes
+RewriteEngine On
+RewriteCond %{HTTPS} off
+RewriteRule ^(.*)$ https://%{HTTP_HOST}/$1 [R=301,L]
+<FilesMatch "^(config\.php|lib\.php|install\.lock|README-AR\.md)$">
+  Require all denied
+</FilesMatch>
