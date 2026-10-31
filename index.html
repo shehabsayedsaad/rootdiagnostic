@@ -78,6 +78,12 @@ footer{margin:40px 0 30px;text-align:center;font-size:.8rem;color:var(--soft)}fo
 .ord pre{white-space:pre-wrap;font-family:var(--body);font-size:.88rem;margin:0 0 10px;background:var(--panel);border:1px dashed var(--line);border-radius:8px;padding:10px}
 .ord .oa{display:flex;gap:8px;flex-wrap:wrap;align-items:center}.ord .oa select{width:auto}.ord .oa .btn{padding:7px 16px;font-size:.82rem}
 .st-new{border-inline-start:4px solid var(--bad)}.st-progress{border-inline-start:4px solid var(--glow)}.st-done{border-inline-start:4px solid var(--ok)}
+.stp{display:flex;gap:10px;align-items:flex-start;border:1px solid var(--line);border-radius:10px;padding:10px 12px;background:var(--paper);margin-bottom:8px;cursor:pointer;font-size:.92rem;font-weight:400}
+.stp input{width:auto;margin-top:6px;flex-shrink:0}.stp input:checked+span{opacity:.5;text-decoration:line-through}
+.note{border-inline-start:3px solid var(--glow);background:var(--paper);padding:12px 16px;font-size:.88rem;border-radius:2px}
+.tool{display:block;text-decoration:none;color:inherit;border:1px solid var(--line);border-radius:12px;padding:16px 18px;background:var(--paper);margin-bottom:12px;transition:transform .15s,border-color .15s}
+.tool:hover{transform:translateY(-2px);border-color:var(--glow)}.tool b{display:block;font-family:var(--disp);font-size:1rem;margin-bottom:4px}.tool span{font-size:.88rem;color:var(--soft)}.tool small{font-family:var(--mono);font-size:.68rem;color:var(--glow);display:block;margin-top:8px;direction:ltr;text-align:right}
+.btn.adm{padding:7px 18px;font-size:.82rem;margin:-14px 0 24px;position:relative;z-index:2}
 </style>
 </head>
 <body>
@@ -86,12 +92,14 @@ footer{margin:40px 0 30px;text-align:center;font-size:.8rem;color:var(--soft)}fo
   <div class="wrap">
     <div>
       <div class="brand"><img src="assets/logo.jpg" alt="شعار روت دياجنوستيك"><div><b>روت دياجنوستيك</b><span>ROOT DIAGNOSTIC</span></div></div>
+      <a class="btn adm" href="admin/login.php">لوحة الأدمن</a>
       <div class="eyebrow">AUTOBIO · AUTOLUMO · CLIA</div>
       <h1>طلبك لأوتوبيو يصل في رسالة واحدة</h1>
       <p>اطلب كواشف AutoLumo ومستلزماتها، أو احجز صيانة دورية لجهاز الإنارة الكيميائية. املأ النموذج وأرسله على واتساب مباشرة.</p>
       <div class="cta">
         <a class="btn fill" href="#form" data-go="products">اطلب منتجات</a>
         <a class="btn" href="#form" data-go="service">احجز صيانة</a>
+        <a class="btn" href="#form" data-go="guide">تشغيل سريع وأدوات</a>
       </div>
     </div>
     <div aria-hidden="true">
@@ -105,6 +113,7 @@ footer{margin:40px 0 30px;text-align:center;font-size:.8rem;color:var(--soft)}fo
 <main class="wrap panel-wrap" id="form">
   <div class="tabs" role="tablist">
     <button class="tab" role="tab" id="t-products" aria-selected="true" aria-controls="p-products">طلب منتجات</button>
+    <button class="tab" role="tab" id="t-guide" aria-selected="false" aria-controls="p-guide">تشغيل سريع وأدوات</button>
     <button class="tab" role="tab" id="t-service" aria-selected="false" aria-controls="p-service">طلب صيانة دورية</button>
   </div>
   <div class="form">
@@ -147,6 +156,26 @@ footer{margin:40px 0 30px;text-align:center;font-size:.8rem;color:var(--soft)}fo
 
 
     <input id="hp" tabindex="-1" autocomplete="off" aria-hidden="true" style="position:absolute;left:-9999px;width:1px;height:1px;opacity:0">
+    <section id="p-guide" role="tabpanel" aria-labelledby="t-guide" hidden>
+      <div class="grp"><h3>تشغيل سريع — AutoLumo A1000 · A2000 · A2000 Plus</h3>
+        <p class="hint">قائمة تحقق مبنية على تعليمات الاستخدام (IFU) لكواشف أوتوبيو. علّم كل خطوة بعد ما تخلصها (العلامات مش بتتحفظ).</p></div>
+      <div class="grp"><h3>أدوات ومراجع</h3><p class="hint">أدوات مساعدة لمستخدمي أجهزة وكواشف أوتوبيو.</p>
+        <a class="tool" href="tb-igra.html"><b>حاسبة TB-IGRA</b><span>أدخل قيم أنابيب N / P / T واحصل على التفسير: Positive أو Negative أو Indeterminate حسب Cut-offs أوتوبيو.</span><small>TB-IGRA · N / P / T</small></a>
+        <a class="tool" href="a1860.html"><b>مرجع تشغيل جهاز A1860</b><span>مبدأ العمل ووحدات الجهاز، التنظيف اليومي والإغلاق، والبحث في الـ Flags.</span><small>A1860 CONSOLE · OPERATION</small></a>
+        <a class="tool" href="a2000.html"><b>الدليل المرجعي لجهاز A2000 Plus</b><span>دليل تفاعلي بفهرس وصور لجهاز AutoLumo A2000 Plus.</span><small>A2000 PLUS · INTERACTIVE GUIDE</small></a>
+      </div>
+      <div class="grp"><h3>1) قبل ما تبدأ</h3><label class="stp"><input type="checkbox"><span><b>المستهلكات:</b> تأكد من كفاية Chemiluminescent Substrate وWash Buffer وSystem Wash وأوعية التفاعل، وDiluent Universal للكواشف اللي بتحتاجه.</span></label><label class="stp"><input type="checkbox"><span><b>الكاشف:</b> بيتخزن 2–8°م، ويُبرَّد على 2–10°م ساعتين على الأقل قبل الاستخدام. لا تستخدم كاشف منتهي الصلاحية، ولا تخلط مكونات من lots مختلفة.</span></label><label class="stp"><input type="checkbox"><span><b>العينة:</b> سيرم أو بلازما حسب IFU الكاشف. اطرد العينة المعكرة أو المُذابة، وأزل الفقاعات بـ tip، وتجنب العينات الشديدة الانحلال (Hemolysis) أو الدهنية أو الملوثة.</span></label></div>
+      <div class="grp"><h3>2) تحميل الكاشف والعينات</h3><label class="stp"><input type="checkbox"><span><b>الكاشف الجديد (غير المثقوب):</b> اقلبه برفق عدة مرات لإعادة تعليق الجسيمات، وتجنب الرغوة. الكاشف المفتوح لا يُقلب، ولو لزم رُجّه أفقيًا برفق.</span></label><label class="stp"><input type="checkbox"><span><b>حمّل الكيت:</b> الجهاز يقرأ الباركود تلقائيًا. لو لم يُقرأ، أدخل بيانات الكيت يدويًا.</span></label><label class="stp"><input type="checkbox"><span><b>العينات:</b> ضع الأكواب أو الأنابيب على الحامل بحجم يكفي التحليل + الحجم الميت (مثال من IFU الـ Anti-HCV: 10 µL لكل اختبار + 150 µL حجم ميت). راجع IFU كل كاشف.</span></label><label class="stp"><input type="checkbox"><span><b>سجّل البيانات:</b> أدخل بيانات العينات في شاشة البرنامج، واختر التحاليل المطلوبة.</span></label></div>
+      <div class="grp"><h3>3) المعايرة والـ QC</h3><label class="stp"><input type="checkbox"><span><b>المعايرة:</b> مطلوبة كل 28 يومًا. نفّذها بالمعايرات في أكواب على الحامل، بتشغيل مكرر (Duplicate).</span></label><label class="stp"><input type="checkbox"><span><b>كواشف Qualitative (مثل Anti-HCV):</b> بتستخدم Positive/Negative Control بدل المعايرات، وبيتشغلوا تلقائيًا في بداية كل دفعة.</span></label><label class="stp"><input type="checkbox"><span><b>QC:</b> شغّل الكنترول مع العينات في نفس الدورة. النتيجة صالحة لو القيم داخل المدى المطبوع على الليبل، وإلا لا تعتمد النتائج وأعد المحاولة أو عاير.</span></label></div>
+      <div class="grp"><h3>4) تشغيل الدورة</h3><label class="stp"><input type="checkbox"><span>اختر <b>Run</b>. الجهاز يعمل تلقائيًا: ينقل العينة، يضيف الجسيمات، يحضّن ويغسل، يضيف الـ Conjugate، يحضّن ويغسل، يضيف الـ Substrate، يقيس الإشارة (RLU)، ويحسب النتيجة.</span></label><label class="stp"><input type="checkbox"><span>راجع النتائج على الشاشة، واربطها بالتاريخ المرضي والفحوصات الأخرى قبل الاعتماد.</span></label></div>
+      <div class="grp"><h3>5) بعد التشغيل</h3><label class="stp"><input type="checkbox"><span><b>الكاشف المفتوح:</b> يفضل على الجهاز واقفًا حتى 28 يومًا بحد أقصى، وبعدها يُتخلص منه. لو اتشال من الجهاز يتخزن واقفًا على 2–8°م.</span></label><label class="stp"><input type="checkbox"><span><b>المعايرات والكنترول:</b> أغلقها جيدًا وأرجعها 2–8°م فورًا، وتثبت شهرًا بعد الفتح.</span></label></div>
+      <div class="grp"><h3>لازم تعاير تاني لما</h3>
+        <div class="note">الكنترول يطلع خارج المدى بعد التكرار · تغيير Lot الكيت أو الـ Substrate · انتهاء صلاحية منحنى المعايرة (28 يومًا) · استبدال أو إصلاح جزء مهم في الجهاز.</div></div>
+      <div class="grp"><h3>مش مغطى هنا</h3>
+        <div class="note">بدء التشغيل اليومي، الصيانة اليومية والأسبوعية، الإغلاق، وأسماء الشاشات والقوائم بالتحديد، لأنها بتختلف حسب إصدار البرنامج وبتتراجع في دليل المشغّل للجهاز. لو فيه رسالة خطأ أو ضعف في الـ QC، احجز زيارة صيانة.</div>
+        <p style="margin-top:14px"><button class="btn fill" type="button" data-go="service">احجز صيانة للجهاز</button></p></div>
+    </section>
+
     <div class="send" id="sendbar">
       <button class="btn fill" id="web" type="button">أرسل الطلب عبر الموقع</button>
       <a class="btn fill" id="wa" target="_blank" rel="noopener" href="#">أرسل الطلب على واتساب</a>
@@ -192,15 +221,15 @@ GROUPS.forEach(function(g,gi){
 });
 var mode='products',wa=$('wa'),msg=$('msg'),DB=null;
 function tab(m){
-  if(m!=='admin')mode=m;
-  ['products','service'].forEach(function(x){
+  if(m!=='admin'&&m!=='guide')mode=m;
+  ['products','service','guide'].forEach(function(x){
     $('t-'+x).setAttribute('aria-selected',x===m);$('p-'+x).hidden=x!==m;
   });
-  $('udata').hidden=$('sendbar').hidden=m==='admin';msg.textContent='';
+  $('udata').hidden=$('sendbar').hidden=m==='admin'||m==='guide';msg.textContent='';
   upd();
 }
 
-$('t-products').onclick=function(){tab('products')};$('t-service').onclick=function(){tab('service')};
+$('t-products').onclick=function(){tab('products')};$('t-service').onclick=function(){tab('service')};$('t-guide').onclick=function(){tab('guide')};
 document.querySelectorAll('[data-go]').forEach(function(a){a.addEventListener('click',function(){tab(a.dataset.go)})});
 function v(i){return $(i).value.trim()}
 function check(){
