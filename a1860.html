@@ -1,0 +1,625 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AutoLumo A1860 — Field Reference</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ink:#0b1016;
+    --panel:#121a24;
+    --panel-2:#0e151d;
+    --steel:#26333f;
+    --steel-soft:rgba(38,51,63,0.55);
+    --photon:#5eead4;
+    --photon-dim:rgba(94,234,212,0.16);
+    --particle:#a78bfa;
+    --particle-dim:rgba(167,139,250,0.16);
+    --signal:#f0a63a;
+    --danger:#ef6a5f;
+    --paper:#e8edf2;
+    --mute:rgba(232,237,242,0.62);
+    --mute-2:rgba(232,237,242,0.38);
+    --radius:14px;
+  }
+  *{box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{
+    margin:0;
+    background:var(--ink);
+    color:var(--paper);
+    font-family:'IBM Plex Sans', sans-serif;
+    line-height:1.55;
+    -webkit-font-smoothing:antialiased;
+  }
+  h1,h2,h3,.display{
+    font-family:'Space Grotesk', sans-serif;
+    letter-spacing:-0.01em;
+  }
+  .mono{font-family:'IBM Plex Mono', monospace;}
+  a{color:var(--photon);}
+
+  ::selection{ background:var(--photon-dim); }
+
+  /* ---------- layout shells ---------- */
+  .wrap{max-width:1080px; margin:0 auto; padding:0 28px;}
+  section{padding:96px 0; position:relative; border-top:1px solid var(--steel-soft);}
+  section:first-of-type{border-top:none;}
+  .eyebrow{
+    font-family:'IBM Plex Mono', monospace;
+    font-size:12.5px;
+    letter-spacing:0.14em;
+    text-transform:uppercase;
+    color:var(--photon);
+    display:flex; align-items:center; gap:10px;
+    margin-bottom:14px;
+  }
+  .eyebrow .num{color:var(--mute-2);}
+  h2.section-title{font-size:clamp(26px,3.4vw,38px); margin:0 0 8px; font-weight:600;}
+  .section-sub{color:var(--mute); max-width:640px; font-size:15.5px; margin-bottom:44px;}
+
+  /* reveal on scroll */
+  .reveal{opacity:0; transform:translateY(18px); transition:opacity .7s ease, transform .7s ease;}
+  .reveal.in{opacity:1; transform:none;}
+
+  /* ---------- nav dots ---------- */
+  .navdots{
+    position:fixed; right:26px; top:50%; transform:translateY(-50%);
+    display:flex; flex-direction:column; gap:16px; z-index:50;
+  }
+  .navdots button{
+    width:9px; height:9px; border-radius:50%; border:1px solid var(--mute-2);
+    background:transparent; cursor:pointer; padding:0; position:relative;
+    transition:background .25s, border-color .25s, transform .25s;
+  }
+  .navdots button::after{
+    content:attr(data-label);
+    position:absolute; right:22px; top:50%; transform:translateY(-50%);
+    font-family:'IBM Plex Mono',monospace; font-size:11px; letter-spacing:.04em;
+    color:var(--mute); white-space:nowrap; opacity:0; pointer-events:none;
+    transition:opacity .2s;
+  }
+  .navdots button:hover::after{opacity:1;}
+  .navdots button.active{background:var(--photon); border-color:var(--photon); transform:scale(1.25);}
+  @media (max-width:900px){ .navdots{display:none;} }
+
+  /* ---------- top progress bar ---------- */
+  .progress{position:fixed; top:0; left:0; height:2px; background:var(--photon); z-index:60; width:0%;
+    box-shadow:0 0 8px var(--photon);}
+
+  /* ================= HERO ================= */
+  .hero{
+    min-height:92vh; display:flex; flex-direction:column; justify-content:center;
+    padding:140px 0 80px; border-top:none;
+  }
+  .hero-kicker{
+    font-family:'IBM Plex Mono',monospace; font-size:12.5px; letter-spacing:.16em;
+    text-transform:uppercase; color:var(--mute); margin-bottom:18px;
+  }
+  .hero-kicker span{color:var(--particle);}
+  .hero h1{
+    font-size:clamp(38px,6.4vw,68px); font-weight:700; margin:0 0 18px; line-height:1.02;
+  }
+  .hero h1 em{
+    font-style:normal; color:var(--photon);
+    background:linear-gradient(90deg,var(--photon),var(--particle));
+    -webkit-background-clip:text; background-clip:text; color:transparent;
+  }
+  .hero p.lede{ font-size:18px; color:var(--mute); max-width:560px; margin:0 0 42px;}
+
+  .hero-grid{display:grid; grid-template-columns:1.1fr .9fr; gap:52px; align-items:center;}
+  @media (max-width:860px){ .hero-grid{grid-template-columns:1fr;} }
+
+  .quickfacts{display:grid; grid-template-columns:repeat(3,1fr); gap:14px; margin-top:8px;}
+  .qf{
+    border:1px solid var(--steel); border-radius:var(--radius); padding:16px 14px;
+    background:linear-gradient(180deg,var(--panel),var(--panel-2));
+  }
+  .qf .val{font-family:'Space Grotesk',sans-serif; font-size:22px; font-weight:600; color:var(--photon);}
+  .qf .lbl{font-size:12px; color:var(--mute); margin-top:4px;}
+
+  /* ---- signature photon-cycle diagram ---- */
+  .rig{
+    position:relative; height:340px; border:1px solid var(--steel); border-radius:20px;
+    background:radial-gradient(120% 120% at 30% 20%, rgba(167,139,250,0.08), transparent 60%),
+               radial-gradient(120% 120% at 80% 80%, rgba(94,234,212,0.10), transparent 60%),
+               var(--panel-2);
+    overflow:hidden;
+  }
+  .rig-caption{
+    position:absolute; bottom:12px; left:0; right:0; text-align:center;
+    font-family:'IBM Plex Mono',monospace; font-size:11px; color:var(--mute-2); letter-spacing:.05em;
+  }
+  .rig svg{width:100%; height:100%; display:block;}
+
+  .particle-dot{fill:var(--particle);}
+  .conjugate-dot{fill:#f2c14e;}
+  .photon-dot{fill:var(--photon);}
+  .track-line{stroke:var(--steel); stroke-width:1.5; fill:none;}
+  .wave-line{stroke:var(--photon); stroke-width:2; fill:none; opacity:.9;}
+
+  @keyframes travel{
+    0%{ transform:translateX(0); opacity:0; }
+    8%{ opacity:1; }
+    46%{ transform:translateX(230px); opacity:1;}
+    54%{ opacity:0; }
+    100%{ transform:translateX(230px); opacity:0;}
+  }
+  @keyframes burst{
+    0%,50%{ transform:scale(0); opacity:0; }
+    58%{ transform:scale(1); opacity:1; }
+    100%{ transform:scale(2.6); opacity:0; }
+  }
+  @keyframes spike{
+    0%,48%{ stroke-dashoffset:340; }
+    62%{ stroke-dashoffset:0; }
+    100%{ stroke-dashoffset:0; }
+  }
+  .p-particle{ animation:travel 4.2s ease-in-out infinite; }
+  .p-burst-1{ animation:burst 4.2s ease-out infinite; }
+  .p-burst-2{ animation:burst 4.2s ease-out infinite; animation-delay:.12s; }
+  .p-burst-3{ animation:burst 4.2s ease-out infinite; animation-delay:.22s; }
+  .p-wave{ stroke-dasharray:340; animation:spike 4.2s ease-in-out infinite; }
+
+  @media (prefers-reduced-motion:reduce){
+    .p-particle,.p-burst-1,.p-burst-2,.p-burst-3,.p-wave{ animation:none !important; }
+  }
+
+  /* ================= CARDS / GRIDS ================= */
+  .grid-2{display:grid; grid-template-columns:1fr 1fr; gap:18px;}
+  .grid-3{display:grid; grid-template-columns:repeat(3,1fr); gap:16px;}
+  @media (max-width:760px){ .grid-2,.grid-3{grid-template-columns:1fr;} }
+
+  .card{
+    border:1px solid var(--steel); border-radius:var(--radius); padding:22px;
+    background:linear-gradient(180deg,var(--panel),var(--panel-2));
+  }
+  .card h3{font-size:16px; margin:0 0 8px; font-weight:600;}
+  .card p{font-size:14px; color:var(--mute); margin:0;}
+  .card .tag{
+    display:inline-block; font-family:'IBM Plex Mono',monospace; font-size:10.5px;
+    color:var(--particle); border:1px solid var(--particle-dim); background:var(--particle-dim);
+    padding:2px 8px; border-radius:999px; margin-bottom:10px; letter-spacing:.04em;
+  }
+
+  /* table */
+  table{width:100%; border-collapse:collapse; font-size:14px;}
+  th{
+    text-align:left; font-family:'IBM Plex Mono',monospace; font-size:11px; letter-spacing:.06em;
+    text-transform:uppercase; color:var(--mute); padding:10px 12px; border-bottom:1px solid var(--steel);
+  }
+  td{padding:12px; border-bottom:1px solid var(--steel-soft); vertical-align:top; color:var(--paper);}
+  tr:hover td{background:rgba(255,255,255,0.02);}
+  .flagcode{
+    font-family:'IBM Plex Mono',monospace; font-weight:600; font-size:13px;
+    padding:3px 9px; border-radius:6px; display:inline-block;
+  }
+  .flagcode.serious{color:var(--danger); background:rgba(239,106,95,0.12); border:1px solid rgba(239,106,95,0.3);}
+  .flagcode.info{color:var(--photon); background:var(--photon-dim); border:1px solid rgba(94,234,212,0.3);}
+
+  /* variant table */
+  .variant-table td, .variant-table th{text-align:center;}
+  .variant-table td:first-child, .variant-table th:first-child{text-align:left;}
+
+  /* steps list */
+  .steps{list-style:none; margin:0; padding:0; counter-reset:step;}
+  .steps li{
+    counter-increment:step; position:relative; padding:14px 0 14px 46px; border-bottom:1px solid var(--steel-soft);
+    font-size:14.5px; color:var(--mute);
+  }
+  .steps li:last-child{border-bottom:none;}
+  .steps li::before{
+    content:counter(step); position:absolute; left:0; top:12px; width:28px; height:28px;
+    border-radius:50%; border:1px solid var(--steel); display:flex; align-items:center; justify-content:center;
+    font-family:'IBM Plex Mono',monospace; font-size:12px; color:var(--photon);
+  }
+  .steps strong{color:var(--paper); font-weight:600;}
+
+  /* pill toggle */
+  .pillrow{display:flex; gap:10px; flex-wrap:wrap; margin-bottom:22px;}
+  .pill{
+    font-family:'IBM Plex Mono',monospace; font-size:12px; letter-spacing:.03em;
+    padding:8px 16px; border-radius:999px; border:1px solid var(--steel); background:transparent;
+    color:var(--mute); cursor:pointer; transition:all .2s;
+  }
+  .pill.active{ border-color:var(--photon); color:var(--photon); background:var(--photon-dim); }
+
+  .searchbox{
+    width:100%; margin-bottom:24px; position:relative;
+  }
+  .searchbox input{
+    width:100%; background:var(--panel); border:1px solid var(--steel); border-radius:10px;
+    padding:14px 16px 14px 42px; color:var(--paper); font-family:'IBM Plex Sans',sans-serif; font-size:14.5px;
+    outline:none; transition:border-color .2s;
+  }
+  .searchbox input:focus{ border-color:var(--photon); }
+  .searchbox::before{
+    content:"⌕"; position:absolute; left:15px; top:50%; transform:translateY(-50%); color:var(--mute-2); font-size:18px;
+  }
+  .empty-state{ text-align:center; padding:40px 0; color:var(--mute-2); font-family:'IBM Plex Mono',monospace; font-size:13px; }
+
+  .note{
+    border-left:2px solid var(--signal); background:rgba(240,166,58,0.06); padding:14px 18px; border-radius:0 10px 10px 0;
+    font-size:13.5px; color:var(--mute); margin-top:28px;
+  }
+  .note strong{color:var(--signal);}
+
+  footer{
+    padding:60px 0 80px; text-align:center; color:var(--mute-2); font-size:12.5px; font-family:'IBM Plex Mono',monospace;
+  }
+  footer a{color:var(--mute);}
+
+  .subsys-grid{display:grid; grid-template-columns:repeat(2,1fr); gap:12px;}
+  @media (max-width:760px){ .subsys-grid{grid-template-columns:1fr;} }
+  .subsys-row{
+    display:flex; justify-content:space-between; gap:14px; padding:13px 16px; border:1px solid var(--steel-soft);
+    border-radius:10px; background:var(--panel-2); font-size:13.5px;
+  }
+  .subsys-row .k{color:var(--paper); font-weight:500;}
+  .subsys-row .v{color:var(--mute); font-family:'IBM Plex Mono',monospace; font-size:12px; text-align:right;}
+</style>
+<style>.rdback{position:fixed;left:12px;bottom:calc(12px + env(safe-area-inset-bottom,0px));z-index:999;background:#051694;color:#fff;font:600 13px Tahoma,sans-serif;padding:9px 16px;border-radius:999px;text-decoration:none;box-shadow:0 4px 14px rgba(0,0,0,.25)}</style>
+</head>
+<body>
+<a class="rdback" href="index.html">← طلبات روت دياجنوستيك</a>
+
+<div class="progress" id="progress"></div>
+<nav class="navdots" id="navdots"></nav>
+
+<!-- ============ HERO ============ -->
+<section class="hero" id="s-hero">
+  <div class="wrap">
+    <div class="hero-kicker">Autobio Labtec · Automatic Luminescence Immunoassay Analyzer <span>· A1860</span></div>
+    <div class="hero-grid">
+      <div>
+        <h1>Photon in,<br><em>result out.</em></h1>
+        <p class="lede">A working field reference for the AutoLumo A1860 — how it detects, how to run it day to day, and how to read every flag it throws.</p>
+        <div class="quickfacts">
+          <div class="qf"><div class="val">180/hr</div><div class="lbl">max test throughput</div></div>
+          <div class="qf"><div class="val">60</div><div class="lbl">sample capacity, cyclic load</div></div>
+          <div class="qf"><div class="val">25</div><div class="lbl">reagent sites, ≤25 items live</div></div>
+        </div>
+      </div>
+      <div class="rig">
+        <svg viewBox="0 0 320 260" preserveAspectRatio="xMidYMid meet">
+          <line class="track-line" x1="30" y1="130" x2="260" y2="130" stroke-dasharray="2 6"/>
+          <!-- traveling particle group -->
+          <g class="p-particle">
+            <circle class="particle-dot" cx="30" cy="130" r="9"/>
+            <circle class="conjugate-dot" cx="30" cy="130" r="4" transform="translate(9,-6)"/>
+          </g>
+          <!-- burst at reaction site -->
+          <g transform="translate(260,130)">
+            <circle class="photon-dot p-burst-1" r="6" opacity="0"/>
+            <circle class="photon-dot p-burst-2" r="6" opacity="0" transform="rotate(60)"/>
+            <circle class="photon-dot p-burst-3" r="6" opacity="0" transform="rotate(-60)"/>
+            <circle fill="none" stroke="var(--photon)" stroke-width="1" r="14" opacity="0.5"/>
+          </g>
+          <!-- RLU waveform readout -->
+          <path class="wave-line p-wave" d="M20,210 L90,210 L110,210 140,150 160,230 180,190 200,210 L300,210" />
+          <text x="30" y="245" fill="var(--mute-2)" font-size="9" font-family="IBM Plex Mono, monospace" letter-spacing="1">MAGNETIC PARTICLE</text>
+          <text x="205" y="245" fill="var(--mute-2)" font-size="9" font-family="IBM Plex Mono, monospace" letter-spacing="1">RLU READOUT</text>
+        </svg>
+        <div class="rig-caption">chemiluminescence cycle — particle bind → substrate reaction → photon capture</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 01 OVERVIEW ============ -->
+<section id="s-overview">
+  <div class="wrap reveal">
+    <div class="eyebrow"><span class="num">01</span> Overview</div>
+    <h2 class="section-title">What the A1860 is for</h2>
+    <p class="section-sub">Intended purpose, in plain terms, before the mechanics.</p>
+
+    <div class="grid-2">
+      <div class="card">
+        <span class="tag">INTENDED PURPOSE</span>
+        <h3>Quantitative &amp; qualitative immunoassay</h3>
+        <p>Automated chemiluminescence immunoassay analyzer for in vitro diagnostic use — infectious disease markers, tumor markers, sex hormones, thyroid hormone, and related analytes from serum, plasma, or urine.</p>
+      </div>
+      <div class="card">
+        <span class="tag">MODEL FAMILY</span>
+        <h3>A1800 / A1820 / A1860 / A1880</h3>
+        <p>Same core engine, different configuration. The A1860 carries an external barcode scanner and 24-position sample racks, but does not have automatic water emptying — that distinction matters for shutdown planning below.</p>
+      </div>
+    </div>
+
+    <div class="note"><strong>Operator scope —</strong> this instrument is to be operated only by personnel trained and authorized by Autobio. This reference supports that training; it doesn't replace it.</div>
+  </div>
+</section>
+
+<!-- ============ 02 WORKING PRINCIPLE ============ -->
+<section id="s-principle">
+  <div class="wrap reveal">
+    <div class="eyebrow"><span class="num">02</span> Working Principle</div>
+    <h2 class="section-title">Magnetic particle separation + chemiluminescence</h2>
+    <p class="section-sub">The detection chemistry that everything else in this reference — sample flow, incubation, flags — is built around.</p>
+
+    <div class="grid-2" style="margin-bottom:20px;">
+      <div class="card">
+        <span class="tag">STEP 1–2</span>
+        <h3>Complex formation</h3>
+        <p>Antigen/antibody-coated magnetic particles react immunologically with an enzyme-labeled antigen/antibody conjugate, forming the antigen–antibody complex to be measured.</p>
+      </div>
+      <div class="card">
+        <span class="tag">STEP 3–4</span>
+        <h3>Substrate reaction → photon capture</h3>
+        <p>The enzyme-labeled complex catalyzes the luminescence substrate, emitting photons. A photometer records the photon energy, and the system converts light intensity to analyte concentration.</p>
+      </div>
+    </div>
+
+    <div class="card">
+      <span class="tag">PERFORMANCE PARAMETERS</span>
+      <table>
+        <tr><th>Parameter</th><th>Spec</th></tr>
+        <tr><td>Test speed</td><td class="mono">Max. 180 tests/hour</td></tr>
+        <tr><td>Sample carrier</td><td class="mono">5 sample sites / rack, 60 samples cyclic</td></tr>
+        <tr><td>Sample types</td><td class="mono">Serum, plasma, urine</td></tr>
+        <tr><td>Reagent sites / live items</td><td class="mono">25 sites, ≤25 items simultaneously</td></tr>
+        <tr><td>Dilution</td><td class="mono">Custom + fixed, up to 51×51 = 2601×</td></tr>
+        <tr><td>Reaction vessel supply</td><td class="mono">80/rack × 2 racks = 160, non-stop online add</td></tr>
+        <tr><td>Probe cleaning</td><td class="mono">Surround-type vacuum suction</td></tr>
+        <tr><td>Reaction mixing</td><td class="mono">Eccentric, non-contact swirl</td></tr>
+      </table>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 03 STRUCTURE ============ -->
+<section id="s-structure">
+  <div class="wrap reveal">
+    <div class="eyebrow"><span class="num">03</span> Structure</div>
+    <h2 class="section-title">Functional units</h2>
+    <p class="section-sub">Ten cooperating units — this is also the map you'll use later to localize a fault.</p>
+
+    <div class="grid-3">
+      <div class="card"><h3>Sample management</h3><p>Rack loading, ID read, liquid-level sensing.</p></div>
+      <div class="card"><h3>Reagent management</h3><p>25-site carousel, refrigerated, continuous particle mixing.</p></div>
+      <div class="card"><h3>Reaction vessel loading</h3><p>160-vessel online, non-stop supply across 2 racks.</p></div>
+      <div class="card"><h3>Sample/reagent adding</h3><p>Single-probe injection with air-suction &amp; clot detection.</p></div>
+      <div class="card"><h3>Incubation</h3><p>Temperature-controlled reaction tray.</p></div>
+      <div class="card"><h3>Cleaning &amp; metering</h3><p>B/F wash station, magnetic separation.</p></div>
+      <div class="card"><h3>Mixing</h3><p>Eccentric non-contact swirl mixing.</p></div>
+      <div class="card"><h3>Gripper</h3><p>Vessel transport between stations.</p></div>
+      <div class="card"><h3>Circuit control</h3><p>System-wide electronic control.</p></div>
+      <div class="card"><h3>Liquid path</h3><p>Pure water, wash buffer, waste routing.</p></div>
+    </div>
+
+    <div class="card" style="margin-top:16px;">
+      <span class="tag">VARIANT DIFFERENCES</span>
+      <table class="variant-table">
+        <tr><th>Model</th><th>External barcode scanner</th><th>Automatic water emptying</th><th>Sample racks</th></tr>
+        <tr><td>AutoLumo A1800</td><td>Yes</td><td>Yes</td><td class="mono">24</td></tr>
+        <tr><td>AutoLumo A1820</td><td>No</td><td>No</td><td class="mono">18</td></tr>
+        <tr><td style="color:var(--photon);">AutoLumo A1860</td><td>Yes</td><td>No</td><td class="mono">24</td></tr>
+        <tr><td>AutoLumo A1880</td><td>No</td><td>Yes</td><td class="mono">18</td></tr>
+      </table>
+    </div>
+    <div class="note"><strong>A1860-specific —</strong> no automatic water emptying means long-term shutdown (below) needs the manual/automatic emptying procedure run deliberately — it won't happen on its own.</div>
+  </div>
+</section>
+
+<!-- ============ 04 OPERATING GUIDELINES ============ -->
+<section id="s-operating">
+  <div class="wrap reveal">
+    <div class="eyebrow"><span class="num">04</span> Operating Guidelines</div>
+    <h2 class="section-title">Daily running, cleaning, shutdown</h2>
+    <p class="section-sub">The sequences that actually protect result quality and instrument lifespan.</p>
+
+    <div class="grid-2">
+      <div class="card">
+        <h3>Daily clean (before the day's run)</h3>
+        <ul class="steps">
+          <li>Sample probe internal + external wash — <strong>≥10 cycles</strong></li>
+          <li>B/F wash station — <strong>≥20 cycles</strong></li>
+          <li>Substrate line wash — <strong>≥60 cycles</strong> at 50 µL/cycle</li>
+          <li>Don't interrupt the cleaning run — stopping mid-cycle risks database or operation faults</li>
+        </ul>
+      </div>
+      <div class="card">
+        <h3>Daily maintain (after the day's run)</h3>
+        <ul class="steps">
+          <li>Runs automatically after testing completes, before software shutdown — no manual action needed by default</li>
+          <li>If manually triggered: sample probe ≥10 cycles, B/F wash ≥20 cycles</li>
+          <li>Continuous-run labs: perform after the longest idle period, not just once daily</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="grid-2" style="margin-top:16px;">
+      <div class="card">
+        <h3>Daily shutdown</h3>
+        <ul class="steps">
+          <li>Confirm status is <strong>Ready / Not Ready / Offline</strong> — never during Running or Pause</li>
+          <li>Run daily maintain</li>
+          <li>Remove all sample racks and containers</li>
+          <li>Remove and refrigerate all kits</li>
+          <li>Empty large-capacity waste containers</li>
+          <li>Clear solid waste containers, then power down instrument + computer</li>
+        </ul>
+      </div>
+      <div class="card">
+        <h3>Long-term shutdown (&gt; 5 days)</h3>
+        <ul class="steps">
+          <li>Contact Autobio technical support first to confirm the exact process for your unit</li>
+          <li>Run <strong>BF Emptying</strong>, then Close Software → Shutdown Computer → Shutdown Instrument</li>
+          <li>Swap substrate bottles and wash buffer for purified water, run the water-loading/emptying cycle</li>
+          <li>Confirm no residual liquid in sample probe, magnetic wash, or substrate lines before leaving it</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="note"><strong>Temperature gate —</strong> if incubation tray, reagent carousel, substrate, or cleaning/metering temperatures haven't reached their normal range, the system will not start detection — this is by design, not a fault to work around.</div>
+  </div>
+</section>
+
+<!-- ============ 05 TROUBLESHOOTING ============ -->
+<section id="s-trouble">
+  <div class="wrap reveal">
+    <div class="eyebrow"><span class="num">05</span> Troubleshooting</div>
+    <h2 class="section-title">Flag lookup</h2>
+    <p class="section-sub">Every serious and non-serious result flag from the A1860 manual, searchable by code or keyword.</p>
+
+    <div class="searchbox">
+      <input type="text" id="flagSearch" placeholder="Search a flag code or symptom — e.g. TRI, substrate, dark value…">
+    </div>
+    <div class="pillrow" id="pillrow">
+      <button class="pill active" data-filter="all">All flags</button>
+      <button class="pill" data-filter="serious">Serious</button>
+      <button class="pill" data-filter="info">Non-serious</button>
+    </div>
+
+    <div class="card">
+      <table id="flagTable">
+        <tr><th style="width:90px;">Flag</th><th>Meaning</th><th>Corrective action</th></tr>
+      </table>
+      <div class="empty-state" id="emptyState" style="display:none;">No flags match that search.</div>
+    </div>
+
+    <h3 style="margin:44px 0 6px; font-size:17px;">Subsystem quick-map <span class="mono" style="font-size:12px; color:var(--mute-2); font-weight:400;">— general diagnostic logic, not vendor-documented</span></h3>
+    <p class="section-sub" style="margin-bottom:20px;">If a flag pattern spans more than one code below, it usually traces to one shared subsystem — use this to localize before escalating.</p>
+    <div class="subsys-grid">
+      <div class="subsys-row"><span class="k">Incubation &amp; temperature control</span><span class="v">TRI · TRIH · TRS · TRSH · TRR · TRRH</span></div>
+      <div class="subsys-row"><span class="k">Optical / PMT reading</span><span class="v">RLU · DRK</span></div>
+      <div class="subsys-row"><span class="k">Sample probe &amp; pipetting</span><span class="v">CLT · QNS</span></div>
+      <div class="subsys-row"><span class="k">Magnetic separation / B-F wash</span><span class="v">QSB · QWB</span></div>
+      <div class="subsys-row"><span class="k">Reagent handling &amp; expiry</span><span class="v">QNR · LEX · EXS · QEX</span></div>
+      <div class="subsys-row"><span class="k">Calibration &amp; QC</span><span class="v">CEX · REJ · HCV · QCF · LQCF</span></div>
+    </div>
+
+    <div class="note"><strong>Escalate when —</strong> a fault affects reported patient results and a controlled repeat + QC pass doesn't clear it; the same subsystem recurs within a short interval; or the fix would need internal calibration, PMT/optics service, or mechanical part replacement. Those go to an Autobio service engineer, not further workaround attempts.</div>
+  </div>
+</section>
+
+<footer>
+  AutoLumo A1860 · Automatic Luminescence Immunoassay Analyzer — reference compiled from the Autobio Operating Manual (V1.1, 2022‑06‑09). Confirm exact menu paths and firmware behavior against the current manual or Autobio technical support before acting on anything safety-critical.
+</footer>
+
+<script>
+// ---------------- flag data ----------------
+const flags = [
+  {code:"CCR", type:"serious", meaning:"Result cannot be calculated — a test in the derived-result formula failed, or another error blocked calculation.", action:"Check each result feeding the derived formula. Review the event log around the same timestamp. Repeat the derived-result test set. Escalate if it persists."},
+  {code:"CLT", type:"serious", meaning:"Clot detected in the sample tube before partitioning, or in the reaction vessel during processing.", action:"Review event log near the event time. Repeat detection. Escalate if it persists."},
+  {code:"IND", type:"serious", meaning:"Result sits at the low/high end of the dose-response curve — indistinguishable from a system error.", action:"Review event log. If an event occurred, escalate. Run QC, then repeat detection; if QC is out of range, follow QC troubleshooting."},
+  {code:"QNS", type:"serious", meaning:"Sample volume was insufficient during processing.", action:"Review event log. Repeat detection. Escalate if it persists."},
+  {code:"RLU", type:"serious", meaning:"Relative Light Units fall outside the acceptable photometer measurement range.", action:"Review event log near the event time. Repeat detection. Escalate if it persists."},
+  {code:"SYS", type:"serious", meaning:"A device error occurred during processing.", action:"Review event log. Repeat detection. Escalate if it persists."},
+  {code:"TRI", type:"serious", meaning:"Incubation (reaction table) temperature outside acceptable range.", action:"Monitor until temperature normalizes — up to 10 min after cover-open/restart, up to 1 hr after extended power-off. Repeat once normal. Escalate if it won't stabilize."},
+  {code:"TRIH", type:"serious", meaning:"Incubation tray temperature is too high.", action:"Same as TRI — monitor, wait for normal range, repeat, escalate if unresolved."},
+  {code:"TRS", type:"serious", meaning:"Substrate temperature outside acceptable range during distribution.", action:"Monitor until temperature normalizes (10 min / 1 hr rule per TRI). Repeat once normal. Escalate if unresolved."},
+  {code:"TRSH", type:"serious", meaning:"Substrate temperature is too high during distribution.", action:"Same as TRS — monitor, wait, repeat, escalate if unresolved."},
+  {code:"TRR", type:"serious", meaning:"Reagent carousel temperature outside normal range.", action:"Monitor until temperature normalizes (10 min / 1 hr rule). Repeat once normal. Escalate if unresolved."},
+  {code:"TRRH", type:"serious", meaning:"Reagent carousel temperature is too high.", action:"Same as TRR — monitor, wait, repeat, escalate if unresolved."},
+  {code:"QSB", type:"serious", meaning:"Insufficient substrate during substrate separation, causing abnormal results.", action:"Check the log for related events. Replace the substrate. Escalate if it persists."},
+  {code:"ERR", type:"serious", meaning:"Test exception from an undetectable cause (e.g. unexpected shutdown).", action:"Search the event log for related events around the same time. Escalate if it persists."},
+  {code:"QWB", type:"serious", meaning:"Lack of wash buffer or purified water while a test is in progress.", action:"Check remaining consumable volume and top up."},
+  {code:"QNR", type:"serious", meaning:"Lack of reagent.", action:"Check remaining reagent volume. If it's actually adequate, escalate — the sensor or level detection may be at fault."},
+  {code:"DRK", type:"serious", meaning:"Dark value is abnormally high — points to the optical/PMT system.", action:"Contact technical support directly — this is not user-serviceable."},
+  {code:"CEX", type:"info", meaning:"Calibration curve or threshold is out of date.", action:"Repeat testing and re-calibrate the analysis."},
+  {code:"REJ", type:"info", meaning:"Luminescence value abnormal — this point was excluded from the calibration calculation.", action:"Check for instrument abnormality during calibration, then re-calibrate."},
+  {code:"OVD", type:"info", meaning:"Result reported after overdilution.", action:"Informational — the software already applied the dilution factor. No action required."},
+  {code:"OLR", type:"info", meaning:"Diluted result, multiplied back, is still below the highest calibrator's result.", action:"Retest without dilution is recommended."},
+  {code:"CRH", type:"info", meaning:"Patient result exceeds the upper critical-range limit.", action:"Valid result — no change operation required."},
+  {code:"CRL", type:"info", meaning:"Patient result exceeds the lower critical-range limit.", action:"Valid result — no change operation required."},
+  {code:"EXS", type:"serious", meaning:"Substrate has expired.", action:"Replace the substrate bottle. Repeat detection."},
+  {code:"GRY", type:"info", meaning:"Qualitative/semi-quantitative result falls in the designated gray zone.", action:"Valid result — no change operation required."},
+  {code:"LEX", type:"info", meaning:"Kit batch number has expired.", action:"Unload all expired kits, load a new kit, repeat detection."},
+  {code:"ORH", type:"info", meaning:"Result is above the upper limit of the normal reference range.", action:"Valid result — no change operation required."},
+  {code:"ORL", type:"info", meaning:"Result is below the lower limit of the normal reference range.", action:"Valid result — no change operation required."},
+  {code:"OVR", type:"info", meaning:"Calculated concentration exceeds the highest calibrator (quantitative/semi-quant only).", action:"Review the log for events near the test. If QC is in range and result is genuinely >X, dilute per the product's own dilution guidance; if QC is out of range, follow QC troubleshooting instead."},
+  {code:"QCF", type:"info", meaning:"QC result violates one or more QC rules.", action:"Open the QC data screen to see which rule failed, then follow the QC troubleshooting procedure for that rule."},
+  {code:"LQCF", type:"info", meaning:"Final QC (high/medium/low) is out of control — subsequent results are labeled LQCF.", action:"Redo the QC test or recalibrate before trusting further results on that item."},
+  {code:"QEX", type:"info", meaning:"QC product batch number has expired.", action:"Load an unexpired QC lot and repeat detection."},
+  {code:"HCV", type:"info", meaning:"Calibration %CV exceeded the permitted range.", action:"Repeat detection. Escalate if the fault persists."},
+  {code:"DRX", type:"info", meaning:"Result derived from a formula.", action:"Valid result — no change operation required."},
+];
+
+const tableBody = document.getElementById("flagTable");
+const emptyState = document.getElementById("emptyState");
+let activeFilter = "all";
+
+function renderFlags(query=""){
+  const q = query.trim().toLowerCase();
+  tableBody.querySelectorAll("tr.flagrow").forEach(r=>r.remove());
+  let shown = 0;
+  flags.forEach(f=>{
+    const matchesFilter = activeFilter === "all" || f.type === activeFilter;
+    const matchesQuery = !q || f.code.toLowerCase().includes(q) || f.meaning.toLowerCase().includes(q) || f.action.toLowerCase().includes(q);
+    if(matchesFilter && matchesQuery){
+      shown++;
+      const tr = document.createElement("tr");
+      tr.className = "flagrow";
+      tr.innerHTML = `<td><span class="flagcode ${f.type === 'serious' ? 'serious' : 'info'}">${f.code}</span></td>
+                      <td>${f.meaning}</td>
+                      <td>${f.action}</td>`;
+      tableBody.appendChild(tr);
+    }
+  });
+  emptyState.style.display = shown === 0 ? "block" : "none";
+}
+renderFlags();
+
+document.getElementById("flagSearch").addEventListener("input", e=>renderFlags(e.target.value));
+document.querySelectorAll("#pillrow .pill").forEach(btn=>{
+  btn.addEventListener("click", ()=>{
+    document.querySelectorAll("#pillrow .pill").forEach(b=>b.classList.remove("active"));
+    btn.classList.add("active");
+    activeFilter = btn.dataset.filter;
+    renderFlags(document.getElementById("flagSearch").value);
+  });
+});
+
+// ---------------- scroll reveal ----------------
+const revealEls = document.querySelectorAll(".reveal");
+const revealObserver = new IntersectionObserver((entries)=>{
+  entries.forEach(e=>{ if(e.isIntersecting) e.target.classList.add("in"); });
+},{threshold:0.12});
+revealEls.forEach(el=>revealObserver.observe(el));
+
+// ---------------- nav dots ----------------
+const sections = [
+  {id:"s-hero", label:"Intro"},
+  {id:"s-overview", label:"Overview"},
+  {id:"s-principle", label:"Principle"},
+  {id:"s-structure", label:"Structure"},
+  {id:"s-operating", label:"Operating"},
+  {id:"s-trouble", label:"Troubleshooting"},
+];
+const navdots = document.getElementById("navdots");
+sections.forEach(s=>{
+  const b = document.createElement("button");
+  b.dataset.label = s.label;
+  b.dataset.target = s.id;
+  b.addEventListener("click", ()=>document.getElementById(s.id).scrollIntoView({behavior:"smooth"}));
+  navdots.appendChild(b);
+});
+const dotButtons = navdots.querySelectorAll("button");
+const navObserver = new IntersectionObserver((entries)=>{
+  entries.forEach(e=>{
+    const btn = navdots.querySelector(`button[data-target="${e.target.id}"]`);
+    if(!btn) return;
+    if(e.isIntersecting) {
+      dotButtons.forEach(b=>b.classList.remove("active"));
+      btn.classList.add("active");
+    }
+  });
+},{threshold:0.4});
+sections.forEach(s=>{
+  const el = document.getElementById(s.id);
+  if(el) navObserver.observe(el);
+});
+
+// ---------------- progress bar ----------------
+const progress = document.getElementById("progress");
+window.addEventListener("scroll", ()=>{
+  const h = document.documentElement;
+  const scrolled = (h.scrollTop) / (h.scrollHeight - h.clientHeight) * 100;
+  progress.style.width = scrolled + "%";
+});
+</script>
+</body>
+</html>
