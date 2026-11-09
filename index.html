@@ -1,0 +1,384 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>روت دياجنوستيك — طلبات أوتوبيو</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Readex+Pro:wght@400;600;700&family=IBM+Plex+Sans+Arabic:wght@400;500;600&family=IBM+Plex+Mono:wght@500&display=swap" rel="stylesheet">
+<style>
+:root{--paper:#EEF3F2;--panel:#fff;--ink:#0B2B33;--soft:#5A6E73;--line:#D3DEDC;--glow:#5BC8FF;--deep:#06161C;--ok:#1E7A67;--bad:#B3374A;
+--disp:'Readex Pro','Segoe UI',Tahoma,sans-serif;--body:'IBM Plex Sans Arabic','Segoe UI',Tahoma,sans-serif;--mono:'IBM Plex Mono',Consolas,monospace;
+box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--paper:#0D1A1F;--panel:#13252B;--ink:#E6F0F0;--soft:#9DB1B5;--line:#244048}}
+:root[data-theme="dark"]{--paper:#0D1A1F;--panel:#13252B;--ink:#E6F0F0;--soft:#9DB1B5;--line:#244048}
+*{box-sizing:border-box}html{scroll-behavior:smooth;scroll-padding-top:env(safe-area-inset-top,0px)}
+body{margin:0;background:radial-gradient(circle at 8% 12%,rgba(91,200,255,.16),transparent 26%),radial-gradient(circle at 92% 48%,rgba(5,22,148,.08),transparent 30%),linear-gradient(135deg,#F7FBFC 0%,#E8F2F4 48%,#F4F8F8 100%);color:var(--ink);font-family:var(--body);line-height:1.7}
+.wrap{max-width:1040px;margin:0 auto;padding:0 20px}
+.hero{background:var(--deep);color:#E6F0F0;padding:56px 0 48px;border-bottom:3px solid var(--glow)}
+.hero .wrap{display:grid;grid-template-columns:1.1fr .9fr;gap:36px;align-items:center}
+.eyebrow{font-family:var(--mono);font-size:.72rem;letter-spacing:.08em;color:var(--glow);direction:ltr;text-align:right;margin-bottom:14px}
+h1{font-family:var(--disp);font-weight:700;font-size:clamp(1.9rem,5vw,3rem);line-height:1.3;margin:0 0 14px}
+.hero p{color:#9DB8BF;max-width:520px;margin:0 0 22px}
+.cta{display:flex;gap:10px;flex-wrap:wrap}
+.btn{font-family:var(--disp);font-weight:600;font-size:.95rem;border-radius:999px;padding:12px 22px;border:1.5px solid var(--glow);text-decoration:none;cursor:pointer;display:inline-block;transition:transform .15s;background:transparent;color:var(--glow)}
+.btn:hover{transform:translateY(-2px)}.btn.fill{background:var(--glow);color:var(--deep)}
+.plate{direction:ltr;display:grid;grid-template-columns:repeat(12,1fr);gap:7px;padding:16px;border:1px solid #1d3a44;border-radius:14px;background:#0A1F27}
+.w{aspect-ratio:1;border-radius:50%;background:#12303a;opacity:.55;transition:all .35s}
+.w.on{background:var(--glow);opacity:1;box-shadow:0 0 12px 2px rgba(91,200,255,.7)}
+.w.mid{background:#2b7fa3;opacity:.9}
+.plate-cap{font-family:var(--mono);font-size:.65rem;color:#6C8C95;direction:ltr;margin-top:10px;text-align:left}
+.panel-wrap{margin:-26px auto 0;position:relative}
+.tabs{display:grid;grid-template-columns:1fr 1fr;background:var(--panel);border:1px solid var(--line);border-radius:12px 12px 0 0;overflow:hidden}
+.tab{font-family:var(--disp);font-weight:600;font-size:1rem;padding:16px;border:0;background:transparent;color:var(--soft);cursor:pointer;border-bottom:3px solid transparent}
+.tab[aria-selected="true"]{color:var(--ink);border-bottom-color:var(--glow);background:var(--paper)}
+.tab:focus-visible,.btn:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible,.q button:focus-visible{outline:3px solid var(--glow);outline-offset:2px}
+.form{background:var(--panel);border:1px solid var(--line);border-top:0;border-radius:0 0 12px 12px;padding:26px}
+.grp{margin-bottom:26px}.grp h3{font-family:var(--disp);font-size:.95rem;margin:0 0 4px}
+.grp .hint{font-size:.82rem;color:var(--soft);margin:0 0 12px}
+.fields{display:grid;grid-template-columns:repeat(2,1fr);gap:14px}.fields .full{grid-column:1/-1}
+label{display:block;font-size:.82rem;font-weight:500;margin-bottom:5px}
+input,select,textarea{width:100%;font:inherit;font-size:.95rem;padding:10px 12px;border:1px solid var(--line);border-radius:8px;background:var(--paper);color:var(--ink)}
+input.ltr{direction:ltr;text-align:right}textarea{min-height:90px;resize:vertical}
+.items{display:grid;grid-template-columns:repeat(2,1fr);gap:8px}
+.item{display:flex;justify-content:space-between;align-items:center;gap:10px;border:1px solid var(--line);border-radius:10px;padding:10px 12px;background:var(--paper)}
+.item.has{border-color:var(--glow);box-shadow:inset 0 0 0 1px var(--glow)}
+.item b{font-size:.9rem;font-weight:600;display:block}.item small{font-family:var(--mono);font-size:.68rem;color:var(--soft);direction:ltr;display:block;text-align:right}
+.q{display:flex;align-items:center;gap:8px;flex-shrink:0}
+.q button{width:32px;height:32px;border-radius:50%;border:1px solid var(--line);background:var(--panel);color:var(--ink);font-size:1.1rem;cursor:pointer}
+.q output{font-family:var(--mono);min-width:22px;text-align:center}
+.send{display:flex;gap:10px;flex-wrap:wrap;align-items:center;border-top:1px dashed var(--line);padding-top:20px}
+.send .btn{border-color:var(--ink);color:var(--ink)}.send .btn.fill{background:var(--ink);color:var(--paper)}
+.msg{font-size:.88rem;min-height:1.4em;margin:12px 0 0}.msg.bad{color:var(--bad)}.msg.ok{color:var(--ok)}
+footer{margin:40px 0 30px;text-align:center;font-size:.8rem;color:var(--soft)}footer a{color:inherit}
+.rv{opacity:0;transform:translateY(14px);transition:opacity .6s,transform .6s}.rv.in{opacity:1;transform:none}
+@media (max-width:760px){.hero .wrap{grid-template-columns:1fr}.fields,.items{grid-template-columns:1fr}.form{padding:18px}}
+@media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}.rv{opacity:1;transform:none;transition:none}.w,.btn{transition:none}}
+
+.hero{background:linear-gradient(160deg,#020B3A 0%,#051694 100%);position:relative;overflow:hidden;border-bottom:0;padding-bottom:90px}
+.hero .wrap{position:relative;z-index:2}
+.brand{display:flex;align-items:center;gap:14px;margin-bottom:28px;position:relative;z-index:2}
+.brand img{width:70px;height:70px;border-radius:50%;box-shadow:0 0 0 3px rgba(91,200,255,.35)}
+.brand b{font-family:var(--disp);font-size:1.05rem;display:block}.brand span{font-family:var(--mono);font-size:.68rem;color:var(--glow);direction:ltr;display:block;text-align:right}
+.hero-wave{position:absolute;left:0;bottom:-1px;width:200%;height:90px;z-index:1;fill:var(--paper);animation:drift 16s linear infinite}
+.hero-wave.b{opacity:.4;animation-duration:24s;animation-direction:reverse;bottom:6px}
+.flow{position:fixed;inset:0;z-index:-1;overflow:hidden;pointer-events:none}
+.flow svg{position:absolute;left:0;width:200%;height:300px;animation:drift 40s linear infinite}
+.flow .a{top:18%;fill:rgba(5,22,148,.035)}.flow .b{top:50%;fill:rgba(91,200,255,.075);animation-duration:55s;animation-direction:reverse}.flow .c{bottom:-60px;fill:rgba(5,22,148,.045);animation-duration:70s}
+@keyframes drift{to{transform:translateX(-50%)}}
+.form,.tabs{background:color-mix(in srgb,var(--panel) 92%,transparent);backdrop-filter:blur(6px)}
+.items{grid-template-columns:repeat(3,1fr)}.item{padding:8px 10px}.item b{direction:ltr;text-align:right;font-family:var(--mono);font-size:.82rem}
+.search{margin-bottom:18px}[hidden]{display:none!important}
+.footlogo{width:46px;height:46px;border-radius:50%;display:block;margin:0 auto 10px}
+@media (max-width:760px){.items{grid-template-columns:1fr}}
+@media (prefers-reduced-motion:reduce){.hero-wave,.flow svg{animation:none}}
+.tabs{grid-template-columns:repeat(auto-fit,minmax(0,1fr))}
+.ord{border:1px solid var(--line);border-radius:10px;padding:14px;margin-bottom:12px;background:var(--paper)}
+.ord .oh{display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap;margin-bottom:8px}.ord small{color:var(--soft);font-family:var(--mono)}
+.ord pre{white-space:pre-wrap;font-family:var(--body);font-size:.88rem;margin:0 0 10px;background:var(--panel);border:1px dashed var(--line);border-radius:8px;padding:10px}
+.ord .oa{display:flex;gap:8px;flex-wrap:wrap;align-items:center}.ord .oa select{width:auto}.ord .oa .btn{padding:7px 16px;font-size:.82rem}
+.st-new{border-inline-start:4px solid var(--bad)}.st-progress{border-inline-start:4px solid var(--glow)}.st-done{border-inline-start:4px solid var(--ok)}
+.stp{display:flex;gap:10px;align-items:flex-start;border:1px solid var(--line);border-radius:10px;padding:10px 12px;background:var(--paper);margin-bottom:8px;cursor:pointer;font-size:.92rem;font-weight:400}
+.stp input{width:auto;margin-top:6px;flex-shrink:0}.stp input:checked+span{opacity:.5;text-decoration:line-through}
+.note{border-inline-start:3px solid var(--glow);background:var(--paper);padding:12px 16px;font-size:.88rem;border-radius:2px}
+.tool{display:block;text-decoration:none;color:inherit;border:1px solid var(--line);border-radius:12px;padding:16px 18px;background:var(--paper);margin-bottom:12px;transition:transform .15s,border-color .15s}
+.tool:hover{transform:translateY(-2px);border-color:var(--glow)}.tool b{display:block;font-family:var(--disp);font-size:1rem;margin-bottom:4px}.tool span{font-size:.88rem;color:var(--soft)}.tool small{font-family:var(--mono);font-size:.68rem;color:var(--glow);display:block;margin-top:8px;direction:ltr;text-align:right}
+.btn.adm{padding:7px 18px;font-size:.82rem;margin:-14px 0 24px;position:relative;z-index:2}
+.hpw{position:absolute;width:1px;height:1px;padding:0;border:0;opacity:0;overflow:hidden;clip-path:inset(50%);pointer-events:none}
+.devs{margin:34px auto 10px;border-radius:22px;padding:30px 22px 26px;color:#E6F0F0;position:relative;overflow:hidden;background:radial-gradient(600px 260px at 85% 0%,rgba(91,200,255,.22),transparent 70%),radial-gradient(500px 300px at 0% 100%,rgba(155,39,208,.20),transparent 70%),linear-gradient(160deg,#020B3A 0%,#051694 100%)}
+.devs h2{font-family:var(--disp);font-size:1.5rem;margin:0 0 4px}.devs>p{margin:0 0 20px;color:#9DB8BF;font-size:.92rem}
+.dgrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px}
+.dev{background:rgba(255,255,255,.06);border:1px solid rgba(91,200,255,.25);border-radius:16px;padding:16px 14px;backdrop-filter:blur(4px);display:flex;flex-direction:column;gap:10px}
+.dring{aspect-ratio:1.5;border-radius:12px;display:grid;place-items:center;background:radial-gradient(circle at 50% 50%,rgba(91,200,255,.30) 0,rgba(91,200,255,.08) 38%,transparent 39%),repeating-radial-gradient(circle at 50% 50%,transparent 0 14px,rgba(91,200,255,.14) 14px 15px);background-size:cover}
+.dring b{font-family:var(--disp);font-size:1.55rem;letter-spacing:.02em;direction:ltr}
+.dev small{font-family:var(--mono);font-size:.66rem;color:var(--glow);direction:ltr;text-align:right}
+.dev .btn{padding:8px 14px;font-size:.82rem;text-align:center}.dev a.btn{border-color:rgba(91,200,255,.45)}
+@media (max-width:760px){.dgrid{grid-template-columns:repeat(2,1fr)}}
+
+/* Lab-focused device area */
+.devs{margin-top:46px;border:1px solid rgba(91,200,255,.28);box-shadow:0 22px 60px rgba(2,11,58,.16)}
+.devs:before{content:"LAB SUPPORT · AUTOLUMO";display:inline-flex;align-items:center;font-family:var(--mono);font-size:.68rem;letter-spacing:.08em;color:var(--glow);border:1px solid rgba(91,200,255,.35);border-radius:999px;padding:7px 12px;margin-bottom:14px;direction:ltr}
+.dev-intro{display:flex;align-items:flex-end;justify-content:space-between;gap:24px;margin-bottom:22px}.dev-intro p{max-width:540px!important;margin:0!important}
+.lab-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;min-width:310px}.lab-stat{border:1px solid rgba(91,200,255,.2);background:rgba(255,255,255,.055);border-radius:12px;padding:10px 12px}.lab-stat b{display:block;color:#fff;font-family:var(--disp);font-size:1.2rem;line-height:1.25}.lab-stat span{display:block;color:#9DB8BF;font-size:.72rem;margin-top:3px}
+.dgrid{grid-template-columns:repeat(5,minmax(0,1fr));gap:12px}.dev{min-width:0;padding:12px;border-radius:15px;gap:9px}.dev:hover{border-color:rgba(91,200,255,.65);background:rgba(255,255,255,.09)}.dev .btn{width:100%}.dring{min-height:92px;aspect-ratio:auto;background:radial-gradient(circle at 50% 50%,rgba(91,200,255,.3) 0,rgba(91,200,255,.08) 36%,transparent 37%),repeating-radial-gradient(circle at 50% 50%,transparent 0 13px,rgba(91,200,255,.13) 13px 14px)}
+.lab-note{margin-top:18px;border-top:1px solid rgba(91,200,255,.2);padding-top:14px;color:#9DB8BF;font-size:.82rem}.lab-note strong{color:#E6F0F0}
+@media (max-width:900px){.dgrid{grid-template-columns:repeat(3,1fr)}.dev-intro{align-items:stretch;flex-direction:column}.lab-stats{min-width:0}}
+@media (max-width:560px){.dgrid{grid-template-columns:repeat(2,1fr)}.lab-stats{grid-template-columns:repeat(3,1fr)}.lab-stat{padding:8px 6px;text-align:center}.lab-stat b{font-size:1rem}.lab-stat span{font-size:.65rem}}
+
+/* Brand lockup and laboratory product icons */
+.lab-brand{display:flex;align-items:center;gap:12px;margin-bottom:18px}.lab-brand img{width:48px;height:48px;border-radius:50%;object-fit:cover;box-shadow:0 0 0 2px rgba(91,200,255,.5),0 6px 18px rgba(0,0,0,.18)}.lab-brand b{display:block;font-family:var(--disp);font-size:.98rem;color:#fff}.lab-brand span{display:block;color:var(--glow);font-family:var(--mono);font-size:.62rem;letter-spacing:.06em;direction:ltr}
+#catalog .grp h3{display:flex;align-items:center;gap:9px}.group-icon{width:31px;height:31px;display:inline-grid;place-items:center;border:1px solid rgba(91,200,255,.32);border-radius:9px;background:linear-gradient(145deg,rgba(91,200,255,.18),rgba(5,22,148,.08));color:#167aab;flex:0 0 auto}.group-icon svg{width:18px;height:18px;stroke:currentColor;fill:none;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round}
+
+/* Simplified hero without analyzer plate */
+.hero .wrap{grid-template-columns:1fr}.hero .wrap>div[aria-hidden="true"]{display:none}
+
+@media print{
+  *,*:before,*:after{-webkit-print-color-adjust:exact;print-color-adjust:exact}
+  html,body{background:#fff!important}
+  .flow,.hero-wave{display:none!important}
+  .hero{padding:28px 0 30px;background:#020B3A!important}
+  .hero .wrap{display:block}
+  .hero .wrap>div[aria-hidden="true"]{display:none!important}
+  .rv{opacity:1!important;transform:none!important;transition:none!important}
+  .btn{color:var(--ink)!important;border-color:var(--ink)!important}
+  .btn.fill{background:var(--glow)!important;color:var(--deep)!important}
+  .send{display:none!important}
+  .devs{break-before:page}
+  .grp,.tool,.dev,.ord{break-inside:avoid}
+}
+
+/* HPLC MQ-2000PT service and spare-parts area */
+.hplc-head{border:1px solid rgba(91,200,255,.35);border-radius:14px;padding:16px 18px;background:linear-gradient(135deg,rgba(91,200,255,.12),rgba(5,22,148,.05));margin-bottom:20px}.hplc-head h3{margin:0 0 4px;font-family:var(--disp)}.hplc-head p{margin:0;color:var(--soft);font-size:.86rem}.hplc-tag{display:inline-block;color:#14789f;border:1px solid rgba(91,200,255,.5);border-radius:999px;padding:4px 9px;font-family:var(--mono);font-size:.64rem;direction:ltr;margin-bottom:8px}.hparts{display:grid;grid-template-columns:repeat(2,1fr);gap:8px}.hpart{display:flex;align-items:center;justify-content:space-between;gap:10px;border:1px solid var(--line);border-radius:10px;padding:10px 12px;background:var(--paper)}.hpart.has{border-color:var(--glow);box-shadow:inset 0 0 0 1px var(--glow)}.hpart b{font-size:.86rem}.hpart small{display:block;color:var(--soft);font-size:.7rem;margin-top:2px}.hpart .q button{width:29px;height:29px;font-size:1rem}.hplc-note{border-inline-start:3px solid var(--glow);background:var(--paper);padding:10px 13px;font-size:.82rem;color:var(--soft);margin-top:12px}@media(max-width:760px){.hparts{grid-template-columns:1fr}}
+.panel-wrap{z-index:3}
+</style>
+</head>
+<body>
+<div class="flow" aria-hidden="true"><svg class="a" viewBox="0 0 2880 300" preserveAspectRatio="none"><path d="M0 150 C240 60 480 60 720 150 S1200 240 1440 150 C1680 60 1920 60 2160 150 S2640 240 2880 150 V300 H0 Z"/></svg><svg class="b" viewBox="0 0 2880 300" preserveAspectRatio="none"><path d="M0 150 C240 60 480 60 720 150 S1200 240 1440 150 C1680 60 1920 60 2160 150 S2640 240 2880 150 V300 H0 Z"/></svg><svg class="c" viewBox="0 0 2880 300" preserveAspectRatio="none"><path d="M0 150 C240 60 480 60 720 150 S1200 240 1440 150 C1680 60 1920 60 2160 150 S2640 240 2880 150 V300 H0 Z"/></svg></div>
+<header class="hero">
+  <div class="wrap">
+    <div>
+      <div class="brand"><img src="assets/logo.jpg" alt="شعار روت دياجنوستيك"><div><b>روت دياجنوستيك</b><span>ROOT DIAGNOSTIC</span></div></div>
+      <div class="eyebrow">AUTOBIO · AUTOLUMO · MEDCONN · CLIA</div>
+      <h1>طلبك يصل في رسالة واحدة فقط</h1>
+      <p>اطلب كواشف AutoLumo، أو احجز صيانة لأجهزة AutoLumo وأجهزة MEDCONN، أو اطلب قطع الغيار المناسبة. أرسل الطلب على واتساب مباشرة.</p>
+      <div class="cta">
+        <a class="btn fill" href="#form" data-go="products">اطلب منتجات</a>
+        <a class="btn" href="#form" data-go="service">احجز صيانة</a>
+        <a class="btn" href="#form" data-go="guide">تشغيل سريع وأدوات</a>
+        <a class="btn" href="#form" data-go="hplc">أجهزة MEDCONN</a>
+      </div>
+    </div>
+  </div>
+  <svg class="hero-wave b" viewBox="0 0 2880 90" preserveAspectRatio="none"><path d="M0 50 C240 0 480 0 720 50 S1200 100 1440 50 C1680 0 1920 0 2160 50 S2640 100 2880 50 V90 H0 Z"/></svg><svg class="hero-wave" viewBox="0 0 2880 90" preserveAspectRatio="none"><path d="M0 50 C240 0 480 0 720 50 S1200 100 1440 50 C1680 0 1920 0 2160 50 S2640 100 2880 50 V90 H0 Z"/></svg>
+</header>
+
+<main class="wrap panel-wrap" id="form">
+  <div class="tabs" role="tablist">
+    <button class="tab" role="tab" id="t-products" aria-selected="true" aria-controls="p-products">طلب منتجات</button>
+    <button class="tab" role="tab" id="t-guide" aria-selected="false" aria-controls="p-guide">تشغيل سريع وأدوات</button>
+    <button class="tab" role="tab" id="t-service" aria-selected="false" aria-controls="p-service">أجهزة AutoLumo</button>
+     <button class="tab" role="tab" id="t-hplc" aria-selected="false" aria-controls="p-hplc">أجهزة MEDCONN</button>
+  </div>
+  <div class="form">
+    <div class="grp" id="udata">
+      <h3>بياناتك</h3>
+      <div class="fields">
+        <div><label for="name">الاسم *</label><input id="name" autocomplete="name"></div>
+        <div><label for="phone">رقم الموبايل *</label><input id="phone" class="ltr" inputmode="tel" autocomplete="tel" placeholder="01XXXXXXXXX"></div>
+        <div><label for="email">البريد الإلكتروني (اختياري)</label><input id="email" type="email" class="ltr" autocomplete="email" placeholder="name@example.com"></div>
+        <div><label for="lab">المعمل / الجهة</label><input id="lab"></div>
+        <div><label for="city">المدينة / العنوان</label><input id="city"></div>
+      </div>
+    </div>
+
+    <section id="p-products" role="tabpanel" aria-labelledby="t-products">
+      <div class="search"><label for="q">ابحث عن تحليل</label><input id="q" class="ltr" placeholder="مثال: TSH أو HBsAg أو CA125"></div>
+      <div id="catalog"></div>
+      <div class="grp">
+        <h3>تفاصيل أخرى</h3>
+        <p class="hint">اكتب أسماء التحاليل المحددة، موديل الجهاز، أو أي طلب غير موجود في القائمة.</p>
+        <textarea id="notes" aria-label="تفاصيل الطلب"></textarea>
+      </div>
+    </section>
+
+    <section id="p-service" role="tabpanel" aria-labelledby="t-service" hidden>
+      <div class="grp">
+        <h3>الجهاز والخدمة</h3>
+        <div class="fields">
+          <div><label for="model">موديل الجهاز *</label>
+            <select id="model"><option value="">اختر الموديل</option><option>AutoLumo A1000</option><option>AutoLumo A2000</option><option>AutoLumo A2000 Plus</option><option>AutoLumo A2000 Plus B</option><option>AutoLumo A1860</option><option>AutoLumo S900</option><option>AutoLumo 6200</option><option>موديل آخر</option></select></div>
+          <div><label for="serial">الرقم التسلسلي</label><input id="serial" class="ltr"></div>
+          <div class="full"><label for="stype">نوع الخدمة *</label>
+            <select id="stype"><option value="">اختر نوع الخدمة</option><option>صيانة وقائية دورية</option><option>عطل أو رسالة خطأ على الجهاز</option><option>معايرة ومراجعة الـ QC</option><option>تركيب أو نقل جهاز</option><option>أخرى</option></select></div>
+          <div><label for="last">تاريخ آخر صيانة</label><input type="date" id="last"></div>
+          <div><label for="when">الموعد المفضل للزيارة</label><input type="date" id="when"></div>
+          <div class="full"><label for="desc">وصف الحالة</label><textarea id="desc" placeholder="مثال: رسالة الخطأ، التحليل المتأثر، من متى بدأت المشكلة"></textarea></div>
+        </div>
+      </div>
+    </section>
+    <section id="p-hplc" role="tabpanel" aria-labelledby="t-hplc" hidden>
+      <div class="hplc-head"><span class="hplc-tag">MEDCONN · HPLC · MQ SERIES</span><h3>صيانة وقطع غيار أجهزة MEDCONN</h3><p>خدمة فنية وطلبات قطع غيار لأجهزة MEDCONN سلسلة MQ، حسب وحدات الجهاز وأعطال دليل الصيانة.</p></div>
+      <div class="grp"><h3>بيانات الجهاز والخدمة</h3>
+        <div class="fields">
+          <div><label for="hmodel">موديل الجهاز *</label><select id="hmodel"><option value="">اختر الموديل</option><option>MQ-2000PT</option><option>MQ-2000</option><option>MQ-3000</option><option>MQ-6000</option><option>موديل آخر من السلسلة</option></select></div>
+          <div><label for="hserial">الرقم التسلسلي</label><input id="hserial" class="ltr"></div>
+          <div class="full"><label for="hservice">نوع الطلب *</label><select id="hservice"><option value="">اختر نوع الطلب</option><option>صيانة وقائية دورية</option><option>طلب قطع غيار فقط</option><option>صيانة بسبب ضغط منخفض أو مرتفع</option><option>عطل مضخة الحقن الدقيقة</option><option>عطل الصمام سداسي الاتجاهات أو وحدة السحب</option><option>عطل السرنجة أو التسريب</option><option>عطل الكاشف أو خلية القياس / LED</option><option>عطل الـ Damper أو حساس الضغط</option><option>عطل الـ Degasser أو خطوط السوائل</option><option>معايرة أو تفعيل أو تركيب جهاز</option><option>تحليل كروماتوجرام أو مشكلة نتيجة HbA1c</option><option>أخرى</option></select></div>
+          <div><label for="hlast">تاريخ آخر صيانة</label><input type="date" id="hlast"></div>
+          <div><label for="hwhen">الموعد المفضل</label><input type="date" id="hwhen"></div>
+        </div>
+      </div>
+      <div class="grp"><h3>قطع الغيار المطلوبة</h3><p class="hint">حدد الكمية المطلوبة، وسيتم تأكيد التوافق والتوفر معك قبل التنفيذ.</p><div class="hparts" id="hparts"></div></div>
+      <div class="grp"><label for="hdesc">وصف العطل أو تفاصيل الطلب</label><textarea id="hdesc" placeholder="اذكر رسالة الخطأ، ضغط الجهاز، الجزء المطلوب، أو أرفق التفاصيل في رسالة واتساب."></textarea></div>
+      <div class="hplc-note"><b>تنبيه فني:</b> اختيار قطعة الغيار لا يعني اعتمادها نهائيًا؛ يتم مراجعة موديل الجهاز والرقم التسلسلي والتوافق الفني قبل إرسال عرض السعر.</div>
+    </section>
+
+    <section id="p-guide" role="tabpanel" aria-labelledby="t-guide" hidden>
+      <div class="grp"><h3>تشغيل سريع — AutoLumo A1000 · A2000 · A2000 Plus</h3>
+        <p class="hint">قائمة تحقق مبنية على تعليمات الاستخدام (IFU) لكواشف أوتوبيو. علّم كل خطوة بعد ما تخلصها (العلامات مش بتتحفظ).</p></div>
+      <div class="grp"><h3>أدوات ومراجع</h3><p class="hint">أدوات مساعدة لمستخدمي أجهزة وكواشف أوتوبيو.</p>
+        <a class="tool" href="tb-igra.html"><b>حاسبة TB-IGRA</b><span>أدخل قيم أنابيب N / P / T واحصل على التفسير: Positive أو Negative أو Indeterminate حسب Cut-offs أوتوبيو.</span><small>TB-IGRA · N / P / T</small></a>
+        <a class="tool" href="a1860.html"><b>مرجع تشغيل جهاز A1860</b><span>مبدأ العمل ووحدات الجهاز، التنظيف اليومي والإغلاق، والبحث في الـ Flags.</span><small>A1860 CONSOLE · OPERATION</small></a>
+        <a class="tool" href="a2000.html"><b>الدليل المرجعي لجهاز A2000 Plus</b><span>دليل تفاعلي بفهرس وصور لجهاز AutoLumo A2000 Plus.</span><small>A2000 PLUS · INTERACTIVE GUIDE</small></a>
+      </div>
+      <div class="grp"><h3>1) قبل ما تبدأ</h3><label class="stp"><input type="checkbox"><span><b>المستهلكات:</b> تأكد من كفاية Chemiluminescent Substrate وWash Buffer وSystem Wash وأوعية التفاعل، وDiluent Universal للكواشف اللي بتحتاجه.</span></label><label class="stp"><input type="checkbox"><span><b>الكاشف:</b> بيتخزن 2–8°م، ويُبرَّد على 2–10°م ساعتين على الأقل قبل الاستخدام. لا تستخدم كاشف منتهي الصلاحية، ولا تخلط مكونات من lots مختلفة.</span></label><label class="stp"><input type="checkbox"><span><b>العينة:</b> سيرم أو بلازما حسب IFU الكاشف. اطرد العينة المعكرة أو المُذابة، وأزل الفقاعات بـ tip، وتجنب العينات الشديدة الانحلال (Hemolysis) أو الدهنية أو الملوثة.</span></label></div>
+      <div class="grp"><h3>2) تحميل الكاشف والعينات</h3><label class="stp"><input type="checkbox"><span><b>الكاشف الجديد (غير المثقوب):</b> اقلبه برفق عدة مرات لإعادة تعليق الجسيمات، وتجنب الرغوة. الكاشف المفتوح لا يُقلب، ولو لزم رُجّه أفقيًا برفق.</span></label><label class="stp"><input type="checkbox"><span><b>حمّل الكيت:</b> الجهاز يقرأ الباركود تلقائيًا. لو لم يُقرأ، أدخل بيانات الكيت يدويًا.</span></label><label class="stp"><input type="checkbox"><span><b>العينات:</b> ضع الأكواب أو الأنابيب على الحامل بحجم يكفي التحليل + الحجم الميت (مثال من IFU الـ Anti-HCV: 10 µL لكل اختبار + 150 µL حجم ميت). راجع IFU كل كاشف.</span></label><label class="stp"><input type="checkbox"><span><b>سجّل البيانات:</b> أدخل بيانات العينات في شاشة البرنامج، واختر التحاليل المطلوبة.</span></label></div>
+      <div class="grp"><h3>3) المعايرة والـ QC</h3><label class="stp"><input type="checkbox"><span><b>المعايرة:</b> مطلوبة كل 28 يومًا. نفّذها بالمعايرات في أكواب على الحامل، بتشغيل مكرر (Duplicate).</span></label><label class="stp"><input type="checkbox"><span><b>كواشف Qualitative (مثل Anti-HCV):</b> بتستخدم Positive/Negative Control بدل المعايرات، وبيتشغلوا تلقائيًا في بداية كل دفعة.</span></label><label class="stp"><input type="checkbox"><span><b>QC:</b> شغّل الكنترول مع العينات في نفس الدورة. النتيجة صالحة لو القيم داخل المدى المطبوع على الليبل، وإلا لا تعتمد النتائج وأعد المحاولة أو عاير.</span></label></div>
+      <div class="grp"><h3>4) تشغيل الدورة</h3><label class="stp"><input type="checkbox"><span>اختر <b>Run</b>. الجهاز يعمل تلقائيًا: ينقل العينة، يضيف الجسيمات، يحضّن ويغسل، يضيف الـ Conjugate، يحضّن ويغسل، يضيف الـ Substrate، يقيس الإشارة (RLU)، ويحسب النتيجة.</span></label><label class="stp"><input type="checkbox"><span>راجع النتائج على الشاشة، واربطها بالتاريخ المرضي والفحوصات الأخرى قبل الاعتماد.</span></label></div>
+      <div class="grp"><h3>5) بعد التشغيل</h3><label class="stp"><input type="checkbox"><span><b>الكاشف المفتوح:</b> يفضل على الجهاز واقفًا حتى 28 يومًا بحد أقصى، وبعدها يُتخلص منه. لو اتشال من الجهاز يتخزن واقفًا على 2–8°م.</span></label><label class="stp"><input type="checkbox"><span><b>المعايرات والكنترول:</b> أغلقها جيدًا وأرجعها 2–8°م فورًا، وتثبت شهرًا بعد الفتح.</span></label></div>
+      <div class="grp"><h3>لازم تعاير تاني لما</h3>
+        <div class="note">الكنترول يطلع خارج المدى بعد التكرار · تغيير Lot الكيت أو الـ Substrate · انتهاء صلاحية منحنى المعايرة (28 يومًا) · استبدال أو إصلاح جزء مهم في الجهاز.</div></div>
+      <div class="grp"><h3>مش مغطى هنا</h3>
+        <div class="note">بدء التشغيل اليومي، الصيانة اليومية والأسبوعية، الإغلاق، وأسماء الشاشات والقوائم بالتحديد، لأنها بتختلف حسب إصدار البرنامج وبتتراجع في دليل المشغّل للجهاز. لو فيه رسالة خطأ أو ضعف في الـ QC، احجز زيارة صيانة.</div>
+        <p style="margin-top:14px"><button class="btn fill" type="button" data-go="service">احجز صيانة للجهاز</button></p></div>
+    </section>
+
+    <div class="send" id="sendbar">
+      <a class="btn fill" id="wa" target="_blank" rel="noopener" href="#">أرسل الطلب على واتساب</a>
+      <a class="btn" href="tel:01127166238">اتصال: 01127166238</a>
+      <button class="btn" id="copy" type="button">نسخ نص الطلب</button>
+    </div>
+    <p class="msg" id="msg" aria-live="polite"></p>
+  </div>
+</main>
+
+<section class="wrap devs" id="devices">
+  <div class="lab-brand" aria-label="هوية الشركة"><img src="" id="labLogo" alt="شعار روت دياجنوستيك"><div><b>روت دياجنوستيك</b><span>ROOT DIAGNOSTIC · LAB SOLUTIONS</span></div></div>
+  <div class="dev-intro">
+    <div><h2>حلول المعامل وأجهزة AutoLumo</h2><p>خدمة مخصصة لمعامل التحاليل: اختَر موديل جهازك لحجز الصيانة أو فتح مرجع التشغيل المناسب.</p></div>
+    <div class="lab-stats" aria-label="مزايا الخدمة"><div class="lab-stat"><b>5</b><span>موديلات مدعومة</span></div><div class="lab-stat"><b>CLIA</b><span>تقنية الإنارة</span></div><div class="lab-stat"><b>24/7</b><span>استقبال الطلبات</span></div></div>
+  </div>
+  <div class="dgrid">
+    <div class="dev"><div class="dring" aria-hidden="true"><b>A1000</b></div><small>AUTOLUMO · CLIA</small><button class="btn fill" type="button" data-dev="AutoLumo A1000">احجز صيانة</button></div>
+    <div class="dev"><div class="dring" aria-hidden="true"><b>A2000</b></div><small>AUTOLUMO · CLIA</small><button class="btn fill" type="button" data-dev="AutoLumo A2000">احجز صيانة</button><a class="btn" href="a2000.html" target="_blank" rel="noopener">مرجع التشغيل</a></div>
+    <div class="dev"><div class="dring" aria-hidden="true"><b>A1860</b></div><small>AUTOLUMO · CLIA</small><button class="btn fill" type="button" data-dev="AutoLumo A1860">احجز صيانة</button><a class="btn" href="a1860.html" target="_blank" rel="noopener">مرجع التشغيل</a></div>
+    <div class="dev"><div class="dring" aria-hidden="true"><b>S900</b></div><small>AUTOLUMO · CLIA</small><button class="btn fill" type="button" data-dev="AutoLumo S900">احجز صيانة</button></div>
+    <div class="dev"><div class="dring" aria-hidden="true"><b>6200</b></div><small>AUTOLUMO · CLIA</small><button class="btn fill" type="button" data-dev="AutoLumo 6200">احجز صيانة</button></div>
+  </div>
+  <div class="lab-note"><strong>محتاج كاشف أو مستلزمات؟</strong> استخدم تبويب «طلب منتجات» لإضافة الكميات وإرسال الطلب مباشرة على واتساب.</div>
+</section>
+
+<footer><img class="footlogo" src="assets/logo.jpg" alt="">للتواصل المباشر: <a href="tel:01127166238" dir="ltr">01127166238</a> · يُرسل الطلب كرسالة واتساب ويتم تأكيده بالرد عليها</footer>
+
+<script>
+var PHONE='201127166238';
+var GROUPS=[
+ {t:'الغدة الدرقية والجار درقية',icon:'thyroid',h:'الكمية بعدد الكيتات',n:'TSH,FT3,FT4,T3,T4,Anti-TG,Anti-TPO,TG,PTH,Calcitonin'},
+ {t:'فيروسات الكبد والإيدز',icon:'virus',n:'HBsAg,Anti-HCV,HIV Ag/Ab Combo'},
+ {t:'السل',icon:'lung',n:'TB-IGRA'},
+ {t:'دلالات الأورام',icon:'oncology',n:'AFP,CEA,CA125,CA15-3,CA19-9,tPSA,fPSA,β2-Microglobulin'},
+ {t:'الهرمونات',icon:'hormone',n:'Cortisol,ACTH,Aldosterone,Renin,Angiotensin II,β-hCG,Folate'},
+ {t:'المناعة الذاتية',icon:'immune',n:'ANA IgG,Anti-dsDNA IgG,Anti-CCP IgG,Anti-CL IgG,Anti-CL IgM,Anti-β2GP1 IgM,Anti-GAD (GADA),Anti-IA-2 (IA-2A),Anti-Insulin (IAA),Anti-Islet Cell (ICA)'},
+ {t:'TORCH وHSV',icon:'screen',n:'CMV IgG,CMV IgM,Rubella IgG,Rubella IgM,Toxo IgG,Toxo IgM,HSV-1 IgG,HSV-1 IgM,HSV-2 IgG,HSV-2 IgM'},
+ {t:'أخرى',icon:'test',n:'tIgE,H-FABP'},
+ {t:'المستهلكات والمعايرة',icon:'kit',n:'Chemiluminescent Substrate,Wash Buffer,System Wash,Diluent Universal,Calibrators,Controls,Reaction Vessels'}
+];
+GROUPS.forEach(function(g){g.i=g.n.split(',').map(function(x){return [x,'']})});
+var qty={},$=function(i){return document.getElementById(i)};
+var cat=$('catalog');
+GROUPS.forEach(function(g,gi){
+  var d=document.createElement('div');d.className='grp';
+  d.innerHTML='<h3><span class="group-icon">'+iconSvg(g.icon)+'</span>'+g.t+'</h3>'+(g.h?'<p class="hint">'+g.h+'</p>':'')+'<div class="items"></div>';
+  var box=d.querySelector('.items');
+  g.i.forEach(function(it,ii){
+    var k=gi+'-'+ii;qty[k]=0;
+    var r=document.createElement('div');r.className='item';
+    r.innerHTML='<div><b>'+it[0]+'</b></div><div class="q"><button type="button" aria-label="تقليل '+it[0]+'">−</button><output>0</output><button type="button" aria-label="زيادة '+it[0]+'">+</button></div>';
+    var b=r.querySelectorAll('button'),o=r.querySelector('output');
+    function set(n){qty[k]=Math.max(0,Math.min(99,n));o.textContent=qty[k];r.classList.toggle('has',qty[k]>0);upd()}
+    b[0].onclick=function(){set(qty[k]-1)};b[1].onclick=function(){set(qty[k]+1)};
+    box.appendChild(r);
+  });
+  cat.appendChild(d);
+});
+var HPLC_PARTS=['Column / الكروماتوجرافيك','Micro-Infusion Pump Seal Ring / جلدة المضخة','Piston Assembly / مكبس المضخة','Pump Driver Board / لوحة تشغيل المضخة','Optoelectronic Switch Board / لوحة الحساس الضوئي','Six-way Valve Assembly / الصمام سداسي الاتجاهات','Sampling Needle / إبرة السحب','Syringe Assembly / مجموعة السرنجة','Detector Cell / خلية القياس','LED Lamp Panel / لوحة LED','Damper Pressure Sensor / حساس ضغط الـ Damper','Damper Circuit Board / لوحة الـ Damper','Degasser Assembly / وحدة إزالة الغازات','Main Board / اللوحة الرئيسية','Fuse / فيوز','Power Supply / مصدر الطاقة','Tubing & Fittings / خراطيم ووصلات','Thermal Printer / الطابعة الحرارية'];
+var hqty={};var hp=$('hparts');HPLC_PARTS.forEach(function(name,i){hqty[i]=0;var r=document.createElement('div');r.className='hpart';r.innerHTML='<div><b>'+name.split(' / ')[0]+'</b><small>'+name.split(' / ')[1]+'</small></div><div class="q"><button type="button" aria-label="تقليل '+name+'">−</button><output>0</output><button type="button" aria-label="زيادة '+name+'">+</button></div>';var bs=r.querySelectorAll('button'),o=r.querySelector('output');function set(n){hqty[i]=Math.max(0,Math.min(99,n));o.textContent=hqty[i];r.classList.toggle('has',hqty[i]>0);upd()}bs[0].onclick=function(){set(hqty[i]-1)};bs[1].onclick=function(){set(hqty[i]+1)};hp.appendChild(r)});
+function iconSvg(k){var p={thyroid:'<path d="M9 3c-2 2-3 4-3 6 0 2 1 3 3 3l3-3 3 3c2 0 3-1 3-3 0-2-1-4-3-6"/><path d="M12 9v10M8 21h8"/>',virus:'<circle cx="12" cy="12" r="4"/><path d="M12 2v4M12 18v4M2 12h4M18 12h4M5 5l3 3M16 16l3 3M19 5l-3 3M8 16l-3 3"/>',lung:'<path d="M12 5v15M11 9c-2-2-4-4-6-4-1 3-2 6-2 9 0 3 2 5 5 5 2 0 3-2 4-4M13 9c2-2 4-4 6-4 1 3 2 6 2 9 0 3-2 5-5 5-2 0-3-2-4-4"/>',oncology:'<circle cx="12" cy="12" r="8"/><path d="M12 7v10M7 12h10M9 9l6 6M15 9l-6 6"/>',hormone:'<path d="M8 3v5M16 3v5M8 8h8M10 8v4l-3 5c-1 2 0 4 2 4h6c2 0 3-2 2-4l-3-5V8"/>',immune:'<path d="M12 21s8-4 8-10V5l-8-3-8 3v6c0 6 8 10 8 10Z"/><path d="M12 7v7M8.5 10.5h7"/>',screen:'<rect x="4" y="4" width="16" height="16" rx="3"/><path d="M8 12h8M12 8v8"/>',test:'<path d="M9 3h6M10 3v6l-4 8a2 2 0 0 0 2 3h8a2 2 0 0 0 2-3l-4-8V3"/><path d="M8 15h8"/>',kit:'<path d="M4 7h16v13H4zM8 7V4h8v3M4 12h16M10 12v3h4v-3"/>'};return '<svg viewBox="0 0 24 24" aria-hidden="true">'+(p[k]||p.test)+'</svg>'}
+var logo=$('labLogo'),brandLogo=document.querySelector('.brand img');if(logo&&brandLogo)logo.src=brandLogo.src;
+var mode='products',wa=$('wa'),msg=$('msg'),DB=null;
+function tab(m){
+  if(m!=='guide')mode=m;
+  ['products','service','hplc','guide'].forEach(function(x){
+    $('t-'+x).setAttribute('aria-selected',x===m);$('p-'+x).hidden=x!==m;
+  });
+  $('udata').hidden=$('sendbar').hidden=m==='guide';msg.textContent='';
+  upd();
+}
+
+$('t-products').onclick=function(){tab('products')};$('t-service').onclick=function(){tab('service')};$('t-hplc').onclick=function(){tab('hplc')};$('t-guide').onclick=function(){tab('guide')};
+document.querySelectorAll('[data-go]').forEach(function(a){a.addEventListener('click',function(){tab(a.dataset.go)})});
+function v(i){return $(i).value.trim()}
+function check(){
+  if(!v('name'))return 'اكتب اسمك.';
+  if(v('phone').replace(/\D/g,'').length<10)return 'اكتب رقم موبايل صحيح.';
+  if(v('email')&&!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v('email')))return 'اكتب بريدًا إلكترونيًا صحيحًا.';
+  if(mode==='products'){
+    var any=Object.keys(qty).some(function(k){return qty[k]>0});
+    if(!any&&!v('notes'))return 'اختر منتجًا واحدًا على الأقل أو اكتب ما تحتاجه.';
+  }else if(mode==='hplc'){
+    if(!v('hmodel'))return 'اختر موديل جهاز MEDCONN.';
+    if(!v('hservice'))return 'اختر نوع الطلب.';
+    var hpAny=Object.keys(hqty).some(function(k){return hqty[k]>0});
+    if(v('hservice')==='طلب قطع غيار فقط'&&!hpAny&&!v('hdesc'))return 'حدد قطعة غيار واحدة على الأقل أو اكتب تفاصيل الطلب.';
+  }else{
+    if(!v('model'))return 'اختر موديل الجهاز.';
+    if(!v('stype'))return 'اختر نوع الخدمة.';
+  }
+  return '';
+}
+function build(){
+  var L=[];
+  L.push(mode==='products'?'*طلب منتجات أوتوبيو*':(mode==='hplc'?'*طلب صيانة أو قطع غيار أجهزة MEDCONN*':'*طلب صيانة جهاز أوتوبيو*'));
+  L.push('الاسم: '+v('name'));L.push('الموبايل: '+v('phone'));
+  if(v('email'))L.push('الإيميل: '+v('email'));
+  if(v('lab'))L.push('الجهة: '+v('lab'));
+  if(v('city'))L.push('العنوان: '+v('city'));
+  L.push('');
+  if(mode==='products'){
+    GROUPS.forEach(function(g,gi){g.i.forEach(function(it,ii){var n=qty[gi+'-'+ii];if(n>0)L.push('• '+it[0]+' × '+n)})});
+    if(v('notes')){L.push('');L.push('ملاحظات: '+v('notes'))}
+  }else if(mode==='hplc'){
+    L.push('الجهاز: '+v('hmodel'));
+    if(v('hserial'))L.push('الرقم التسلسلي: '+v('hserial'));
+    L.push('نوع الطلب: '+v('hservice'));
+    if(v('hlast'))L.push('آخر صيانة: '+v('hlast'));
+    if(v('hwhen'))L.push('الموعد المفضل: '+v('hwhen'));
+    HPLC_PARTS.forEach(function(name,i){if(hqty[i]>0)L.push('• '+name+' × '+hqty[i])});
+    if(v('hdesc')){L.push('');L.push('الوصف: '+v('hdesc'))}
+  }else{
+    L.push('الجهاز: '+v('model'));
+    if(v('serial'))L.push('الرقم التسلسلي: '+v('serial'));
+    L.push('الخدمة: '+v('stype'));
+    if(v('last'))L.push('آخر صيانة: '+v('last'));
+    if(v('when'))L.push('الموعد المفضل: '+v('when'));
+    if(v('desc'))L.push('الوصف: '+v('desc'));
+  }
+  return L.join('\n');
+}
+
+function upd(){wa.href='https://wa.me/'+PHONE+'?text='+encodeURIComponent(build())}
+document.querySelectorAll('input,select,textarea').forEach(function(e){e.addEventListener('input',function(){upd();msg.textContent=''})});
+wa.addEventListener('click',function(e){
+  var er=check();upd();
+  if(er){e.preventDefault();msg.className='msg bad';msg.textContent=er}
+  else{msg.className='msg ok';msg.textContent='تم فتح واتساب بنص الطلب. اضغط إرسال هناك لإتمام الطلب.'}
+});
+$('copy').onclick=function(){
+  var er=check();if(er){msg.className='msg bad';msg.textContent=er;return}
+  try{navigator.clipboard.writeText(build()).then(function(){msg.className='msg ok';msg.textContent='تم نسخ نص الطلب.'},function(){msg.className='msg bad';msg.textContent='تعذّر النسخ. استخدم زر واتساب.'})}
+  catch(x){msg.className='msg bad';msg.textContent='تعذّر النسخ. استخدم زر واتساب.'}
+};
+var io=new IntersectionObserver(function(es){es.forEach(function(e){if(e.isIntersecting){e.target.classList.add('in');io.unobserve(e.target)}})},{threshold:.1});
+document.querySelectorAll('.grp').forEach(function(g){g.classList.add('rv');io.observe(g)});
+$('q').addEventListener('input',function(){
+  var t=this.value.trim().toLowerCase();
+  document.querySelectorAll('#catalog .grp').forEach(function(g){
+    var vis=0;g.querySelectorAll('.item').forEach(function(r){var m=r.textContent.toLowerCase().indexOf(t)>-1;r.hidden=!m;if(m)vis++});
+    g.hidden=!vis;
+  });
+});
+
+document.querySelectorAll('[data-dev]').forEach(function(b){b.onclick=function(){tab('service');$('model').value=b.dataset.dev;upd();$('form').scrollIntoView({behavior:'smooth'})}});
+upd();
+</script>
+</body>
+</html>

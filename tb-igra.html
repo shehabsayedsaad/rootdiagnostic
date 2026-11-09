@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>TB-IGRA Result Calculator</title>
+<style>
+  :root{
+    --ink:#1b2430;
+    --paper:#f6f5f1;
+    --panel:#ffffff;
+    --line:#d8d5cc;
+    --accent:#1f6f5c;
+    --accent-dark:#154d40;
+    --neg:#2f6b3a;
+    --pos:#a33b2e;
+    --ind:#a8791f;
+    --mono: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, monospace;
+  }
+  *{box-sizing:border-box;}
+  body{
+    margin:0;
+    font-family: Georgia, 'Iowan Old Style', serif;
+    background:var(--paper);
+    color:var(--ink);
+    padding:24px 16px 60px;
+  }
+  .wrap{max-width:560px;margin:0 auto;}
+  h1{
+    font-size:1.4rem;
+    letter-spacing:0.01em;
+    margin:0 0 2px;
+    font-weight:600;
+  }
+  .sub{
+    font-family: var(--mono);
+    font-size:0.72rem;
+    text-transform:uppercase;
+    letter-spacing:0.08em;
+    color:#6b6357;
+    margin-bottom:22px;
+  }
+  .card{
+    background:var(--panel);
+    border:1px solid var(--line);
+    border-radius:2px;
+    padding:20px;
+    margin-bottom:16px;
+  }
+  .row{
+    display:flex;
+    gap:10px;
+    margin-bottom:12px;
+  }
+  .field{flex:1;}
+  label{
+    display:block;
+    font-family:var(--mono);
+    font-size:0.68rem;
+    text-transform:uppercase;
+    letter-spacing:0.06em;
+    color:#54524a;
+    margin-bottom:5px;
+  }
+  input{
+    width:100%;
+    padding:10px 10px;
+    border:1px solid var(--line);
+    border-radius:2px;
+    font-family:var(--mono);
+    font-size:1rem;
+    background:#fdfdfb;
+    color:var(--ink);
+  }
+  input:focus{
+    outline:none;
+    border-color:var(--accent);
+    box-shadow:0 0 0 2px rgba(31,111,92,0.15);
+  }
+  .unit{
+    font-family:var(--mono);
+    font-size:0.7rem;
+    color:#8a8477;
+    margin-top:4px;
+  }
+  .derived{
+    font-family:var(--mono);
+    font-size:0.85rem;
+    color:#4a473e;
+    border-top:1px dashed var(--line);
+    padding-top:14px;
+    margin-top:6px;
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:6px 14px;
+  }
+  .derived div span{color:#93897a;}
+  .result{
+    border-radius:2px;
+    padding:20px;
+    border:1px solid var(--line);
+    border-left:6px solid var(--accent);
+    background:var(--panel);
+  }
+  .result.negative{border-left-color:var(--neg);}
+  .result.positive{border-left-color:var(--pos);}
+  .result.indeterminate{border-left-color:var(--ind);}
+  .result .label{
+    font-family:var(--mono);
+    text-transform:uppercase;
+    letter-spacing:0.1em;
+    font-size:0.72rem;
+    color:#7a7566;
+  }
+  .result .verdict{
+    font-size:1.7rem;
+    font-weight:700;
+    margin:4px 0 10px;
+  }
+  .result.negative .verdict{color:var(--neg);}
+  .result.positive .verdict{color:var(--pos);}
+  .result.indeterminate .verdict{color:var(--ind);}
+  .reasoning{
+    font-size:0.95rem;
+    line-height:1.5;
+    color:#33312b;
+  }
+  .reasoning code{
+    font-family:var(--mono);
+    background:#efece3;
+    padding:1px 5px;
+    border-radius:2px;
+    font-size:0.85em;
+  }
+  .steps{
+    margin-top:14px;
+    font-family:var(--mono);
+    font-size:0.78rem;
+    color:#5c584d;
+    border-top:1px solid var(--line);
+    padding-top:12px;
+  }
+  .steps div{margin-bottom:4px;}
+  .steps .fail{color:var(--pos);}
+  .steps .pass{color:var(--neg);}
+  footer{
+    font-family:var(--mono);
+    font-size:0.68rem;
+    color:#96907f;
+    text-align:center;
+    margin-top:20px;
+  }
+</style>
+<style>.rdback{position:fixed;left:12px;bottom:calc(12px + env(safe-area-inset-bottom,0px));z-index:999;background:#051694;color:#fff;font:600 13px Tahoma,sans-serif;padding:9px 16px;border-radius:999px;text-decoration:none;box-shadow:0 4px 14px rgba(0,0,0,.25)}</style>
+</head>
+<body>
+<a class="rdback" href="index.html">← طلبات روت دياجنوستيك</a>
+<div class="wrap">
+  <h1>TB-IGRA Result Interpreter</h1>
+  <div class="sub">Autobio CLIA Microparticles &middot; N / P / T logic</div>
+
+  <div class="card">
+    <div class="row">
+      <div class="field">
+        <label for="n">N tube</label>
+        <input type="number" id="n" step="0.001" placeholder="e.g. 0.30">
+      </div>
+      <div class="field">
+        <label for="p">P tube</label>
+        <input type="number" id="p" step="0.001" placeholder="e.g. 15.20">
+      </div>
+      <div class="field">
+        <label for="t">T tube</label>
+        <input type="number" id="t" step="0.001" placeholder="e.g. 1.10">
+      </div>
+    </div>
+    <div class="unit">All values in IU/mL, as read from the AutoLumo report.</div>
+
+    <div class="derived" id="derived" style="display:none;">
+      <div><span>T − N</span> = <span id="tn"></span> IU/mL</div>
+      <div><span>P − N</span> = <span id="pn"></span> IU/mL</div>
+      <div><span>25% of N</span> = <span id="pct"></span> IU/mL</div>
+      <div><span>T−N ≥ 25%N?</span> <span id="pctcheck"></span></div>
+    </div>
+  </div>
+
+  <div class="card result" id="resultCard" style="display:none;">
+    <div class="label">Interpretation</div>
+    <div class="verdict" id="verdict">—</div>
+    <div class="reasoning" id="reasoning"></div>
+    <div class="steps" id="steps"></div>
+  </div>
+
+  <footer>Reference cut-offs per Autobio TB-IGRA CLIA Microparticles result-suggestion sheet. Each lab should verify its own normal range.</footer>
+</div>
+
+<script>
+const nEl = document.getElementById('n');
+const pEl = document.getElementById('p');
+const tEl = document.getElementById('t');
+const derivedBox = document.getElementById('derived');
+const resultCard = document.getElementById('resultCard');
+const verdictEl = document.getElementById('verdict');
+const reasoningEl = document.getElementById('reasoning');
+const stepsEl = document.getElementById('steps');
+
+function fmt(x){
+  return Math.round(x*1000)/1000;
+}
+
+function evaluate(){
+  const n = parseFloat(nEl.value);
+  const p = parseFloat(pEl.value);
+  const t = parseFloat(tEl.value);
+
+  if(isNaN(n) || isNaN(p) || isNaN(t)){
+    derivedBox.style.display = 'none';
+    resultCard.style.display = 'none';
+    return;
+  }
+
+  const tn = t - n;
+  const pn = p - n;
+  const pct25 = 0.25 * n;
+  const meetsPct = tn >= pct25;
+
+  derivedBox.style.display = 'grid';
+  document.getElementById('tn').textContent = fmt(tn);
+  document.getElementById('pn').textContent = fmt(pn);
+  document.getElementById('pct').textContent = fmt(pct25);
+  document.getElementById('pctcheck').textContent = meetsPct ? 'Yes' : 'No';
+
+  let verdict, cls, reasoning;
+  const stepLines = [];
+
+  // Step 1: N > 10
+  const nHigh = n > 10.0;
+  stepLines.push(`<div class="${nHigh ? 'fail' : 'pass'}">N ${nHigh ? '>' : '≤'} 10.0 IU/mL &rarr; ${nHigh ? 'auto-indeterminate' : 'continue'}</div>`);
+
+  if(nHigh){
+    verdict = 'Indeterminate';
+    cls = 'indeterminate';
+    reasoning = `N is above 10.0 IU/mL, indicating high background (possible unrelated infection, heterophilic antibodies, or endotoxin contamination). Per the IFU, any N &gt; 10.0 IU/mL yields an indeterminate result regardless of T or P.`;
+  } else {
+    // Step 2: T-N positive threshold
+    const tnPositive = tn >= 0.438 && meetsPct;
+    stepLines.push(`<div class="${tnPositive ? 'pass' : 'fail'}">T−N ≥ 0.438 AND ≥ 25%N &rarr; ${tnPositive ? 'meets positive criteria' : 'does not meet positive criteria'}</div>`);
+
+    if(tnPositive){
+      verdict = 'Positive';
+      cls = 'positive';
+      reasoning = `T−N (${fmt(tn)} IU/mL) is ≥ 0.438 IU/mL and ≥ 25% of N, satisfying the ROC-derived cut-off for antigen-specific T-cell response. This holds regardless of P−N. Result: M. tuberculosis may have infected T cells.`;
+    } else {
+      // Step 3: P-N control check
+      const pnValid = pn >= 0.625;
+      stepLines.push(`<div class="${pnValid ? 'pass' : 'fail'}">P−N ≥ 0.625 &rarr; ${pnValid ? 'valid positive control' : 'positive control failed'}</div>`);
+
+      if(pnValid){
+        verdict = 'Negative';
+        cls = 'negative';
+        reasoning = `T−N (${fmt(tn)} IU/mL) does not reach the positive threshold, and P−N (${fmt(pn)} IU/mL) confirms adequate T-cell viability (≥ 0.625 IU/mL). Result: M. tuberculosis likely has not infected T cells.`;
+      } else {
+        verdict = 'Indeterminate';
+        cls = 'indeterminate';
+        reasoning = `T−N did not reach the positive threshold, but P−N (${fmt(pn)} IU/mL) is below 0.625 IU/mL — the positive control failed, so a negative call cannot be trusted. This suggests impaired IFN-γ production (immunosuppression, poor T-cell viability) or a pre-analytical issue.`;
+      }
+    }
+  }
+
+  verdictEl.textContent = verdict;
+  reasoningEl.innerHTML = reasoning;
+  stepsEl.innerHTML = stepLines.join('');
+  resultCard.className = `card result ${cls}`;
+  resultCard.style.display = 'block';
+}
+
+[nEl, pEl, tEl].forEach(el => el.addEventListener('input', evaluate));
+</script>
+</body>
+</html>
